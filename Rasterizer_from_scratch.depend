@@ -1,0 +1,18 @@
+# depslib dependency file v1.0
+1665046003 source:e:\projects\rasterizer_from_scratch\rasterizer_from_scratch\src\col.cpp
+	"Col.h"
+
+1665046003 e:\projects\rasterizer_from_scratch\rasterizer_from_scratch\include\col.h
+
+1665046003 source:e:\projects\rasterizer_from_scratch\rasterizer_from_scratch\src\light_source.cpp
+	"Light_Source.h"
+
+1665046003 e:\projects\rasterizer_from_scratch\rasterizer_from_scratch\include\light_source.h
+	"Vec3.h"
+
+1665046003 e:\projects\rasterizer_from_scratch\rasterizer_from_scratch\include\vec3.h
+	<math.h>
+
+1665046003 source:e:\projects\rasterizer_from_scratch\rasterizer_from_scratch\src\vec3.cpp
+	"Vec3.h"
+
