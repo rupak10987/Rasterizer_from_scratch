@@ -10,9 +10,9 @@
 1665046003 e:\projects\rasterizer_from_scratch\rasterizer_from_scratch\include\light_source.h
 	"Vec3.h"
 
-1665046003 e:\projects\rasterizer_from_scratch\rasterizer_from_scratch\include\vec3.h
+1665194494 e:\projects\rasterizer_from_scratch\rasterizer_from_scratch\include\vec3.h
 	<math.h>
 
-1665046003 source:e:\projects\rasterizer_from_scratch\rasterizer_from_scratch\src\vec3.cpp
+1665194486 source:e:\projects\rasterizer_from_scratch\rasterizer_from_scratch\src\vec3.cpp
 	"Vec3.h"
 

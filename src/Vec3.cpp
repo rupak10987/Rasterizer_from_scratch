@@ -73,4 +73,8 @@ class Vec3 Vec3:: CROSS_PRODUCT(class Vec3 A,class Vec3 B)
     C.z=A.x*B.y-A.y*B.x;
     return C;
 
-};
+}
+double Vec3::clac_xy_slope(class Vec3 A)
+{
+return A.y/A.x;
+}
