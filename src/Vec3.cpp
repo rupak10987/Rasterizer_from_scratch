@@ -48,22 +48,22 @@ class Vec3 Vec3:: Scaler_Div_Vec(double a,class Vec3 from)
 };
 double Vec3::DOT_PRODUCT(class Vec3* A,class Vec3* B)
 {
-return (A->x*B->x)+(A->y*B->y)+(A->z*B->z);
+    return (A->x*B->x)+(A->y*B->y)+(A->z*B->z);
 }
 double Vec3::DOT_PRODUCT(class Vec3 A,class Vec3 B)
 {
-return (A.x*B.x)+(A.y*B.y)+(A.z*B.z);
+    return (A.x*B.x)+(A.y*B.y)+(A.z*B.z);
 }
 class Vec3 Vec3:: Negate(class Vec3 A)
 {
-A.x=-A.x;
-A.y=-A.y;
-A.z=-A.z;
-return A;
+    A.x=-A.x;
+    A.y=-A.y;
+    A.z=-A.z;
+    return A;
 }
 class Vec3 Vec3::Normalized_Vec(class Vec3 A)
 {
-return A.Scaler_Div_Vec(sqrt(A.DOT_PRODUCT(A,A)),A);
+    return A.Scaler_Div_Vec(sqrt(A.DOT_PRODUCT(A,A)),A);
 }
 class Vec3 Vec3:: CROSS_PRODUCT(class Vec3 A,class Vec3 B)
 {
@@ -76,5 +76,5 @@ class Vec3 Vec3:: CROSS_PRODUCT(class Vec3 A,class Vec3 B)
 }
 double Vec3::clac_xy_slope(class Vec3 A)
 {
-return A.y/A.x;
+    return A.y/A.x;
 }
