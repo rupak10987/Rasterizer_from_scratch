@@ -16,3 +16,10 @@
 1665195223 source:e:\projects\rasterizer_from_scratch\rasterizer_from_scratch\src\vec3.cpp
 	"Vec3.h"
 
+1665197158 source:e:\projects\rasterizer_from_scratch\rasterizer_from_scratch\source.cpp
+	<graphics.h>
+	<iostream>
+	"Vec3.h"
+	"Light_Source.h"
+	"Col.h"
+
