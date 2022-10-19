@@ -27,4 +27,5 @@ class Vec3
 
 };
 
+
 #endif // VEC3_H
