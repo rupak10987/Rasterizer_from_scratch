@@ -16,29 +16,28 @@ int main()
     setcurrentwindow(win);
     class Vec3 p(-202,-150,0);
     class Vec3 p1(-222,150,0);
+    class Vec3 p2(-2,10,0);
     class Col c(255,255,255);
-    draw_line(p1,p,c);
+    draw_line(p,p1,c);
+    draw_line(p1,p2,c);
+    draw_line(p2,p,c);
     getch();
     closegraph();
     return 0;
 }
-/*class Vec3 screen_cord;
-        screen_cord=normalized_to_screen_cord(i,(int)yn);
-        yn+=m;
-        putpixel(screen_cord.x,screen_cord.y,COLOR(col.r,col.g,col.b));*/
 void draw_line(class Vec3 P,class Vec3 P1,class Col col)
 {
     double DX=abs(P1.x-P.x);
     double DY=abs(P1.y-P.y);
     if(DX>DY)//horizontal
     {
-        if(P.x>P1.x)
+        if(P.x>P1.x)//checking if P is smaller than p1 always goes from low to high
         {
             draw_line(P1,P,col);
         }
         else
         {
-            double m=(P1.y-P.y)/(P1.x-P.x);
+            double m=(P1.y-P.y)/(P1.x-P.x);// calculating slope
             double yn=P.y;
             for(int i=P.x; i<P1.x; i++)
             {
@@ -49,20 +48,20 @@ void draw_line(class Vec3 P,class Vec3 P1,class Col col)
             }
         }
     }
-    else
+    else//vertical
     {
-        if(P.y>P1.y)
+        if(P.y>P1.y)//checking if P is smaller than p1 always goes from low to high
         {
             draw_line(P1,P,col);
         }
     else
         {
-            double m=(P1.x-P.x)/(P1.y-P.y);
+            double m=(P1.x-P.x)/(P1.y-P.y);//calculating slope
             double xn=P.x;
             for(int i=P.y; i<P1.y; i++)
             {
                 Vec3 screen_cord;
-                screen_cord=normalized_to_screen_cord((int)xn,i);
+                screen_cord=normalized_to_screen_cord((int)xn,i);//converting from normal graph cordinate to screen co_ordinate system
                 xn+=m;
                 putpixel(screen_cord.x,screen_cord.y,COLOR(col.r,col.g,col.b));
             }
