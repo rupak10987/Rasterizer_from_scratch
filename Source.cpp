@@ -10,22 +10,25 @@ void ineterpolate(double x0,double y0,double x1,double y1);
 void draw_line(class Vec3 P,class Vec3 P1,class Col col);
 class Vec3 normalized_to_screen_cord(int X,int Y);
 int Win_Width=1000;
-int Win_Height=1000;
+int Win_Height=800;
 int main()
 {
     int win=initwindow(Win_Width,Win_Height,(const char*)"RASTERIZER");
     setcurrentwindow(win);
-    class Vec3 p(20,-50,0);
-    class Vec3 p1(-50,-100,0);
-    class Vec3 p2(30,40,0);
-    class Col c(0,255,255);
-    class Col c1(255,0,0);
+    class Vec3 p(20-200,-50,0);
+    class Vec3 p1(-50-200,-100,0);
+    class Vec3 p2(30-200,40,0);
+    class Col c(100,255,255);
+    class Col c1(255,255,0);
     for(int i=0; i<5; i++)
     {
-        p.x+=50;
-        p1.x+=50;
-        p2.x+=50;
-        draw_filled_tris(p,p1,p2,c);
+        p.x+=80;
+        p.y-=i*30;
+        p1.x+=80;
+        p1.y+=i*20;
+        p2.x+=80;
+        p2.y+=i*20;
+        draw_filled_tris(p,p1,p2,c1);
         //draw_line(p,p1,c1);
         //draw_line(p1,p2,c1);
         //draw_line(p2,p,c1);

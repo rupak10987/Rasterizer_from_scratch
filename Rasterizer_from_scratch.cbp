@@ -37,9 +37,11 @@
 		<Unit filename="include/Col.h" />
 		<Unit filename="include/Light_Source.h" />
 		<Unit filename="include/Vec3.h" />
+		<Unit filename="include/Vertex.h" />
 		<Unit filename="src/Col.cpp" />
 		<Unit filename="src/Light_Source.cpp" />
 		<Unit filename="src/Vec3.cpp" />
+		<Unit filename="src/Vertex.cpp" />
 		<Extensions>
 			<lib_finder disable_auto="1" />
 		</Extensions>
