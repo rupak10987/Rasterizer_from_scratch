@@ -16,7 +16,7 @@ int main()
     int win=initwindow(Win_Width,Win_Height,(const char*)"RASTERIZER");
     setcurrentwindow(win);
     class Vec3 p(20,-50,0);
-    class Vec3 p1(-50,-70,0);
+    class Vec3 p1(-50,-100,0);
     class Vec3 p2(30,40,0);
     class Col c(0,255,255);
     class Col c1(255,0,0);
