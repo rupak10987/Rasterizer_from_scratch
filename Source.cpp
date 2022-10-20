@@ -4,18 +4,55 @@
 #include"Vec3.h"
 #include"Light_Source.h"
 #include"Col.h"
+#include"Vertex.h"
 double Vals[500]= {0};
 void draw_filled_tris(class Vec3 P0,class Vec3 P1,class Vec3 P2,class Col col);
 void ineterpolate(double x0,double y0,double x1,double y1);
 void draw_line(class Vec3 P,class Vec3 P1,class Col col);
+class Vec3 Project_Vertex(class Vertex A);
+class Vec3 View_to_canvas(class Vec3 A);//scales up for the canvas
 class Vec3 normalized_to_screen_cord(int X,int Y);
-int Win_Width=1000;
-int Win_Height=800;
+int Win_Width=500;
+int Win_Height=500;
+int View_H=5;
+int View_W=5;
+double View_d=1;
 int main()
 {
     int win=initwindow(Win_Width,Win_Height,(const char*)"RASTERIZER");
     setcurrentwindow(win);
-    class Vec3 p(20-200,-50,0);
+
+    class Vertex Af(-1,1,1,'r');
+    class Vertex Bf(1,1,1,'r');
+    class Vertex Cf(1,-1,1,'r');
+    class Vertex Df(-1,-1,1,'r');
+
+    class Vertex Ab(1,1,2,'g');
+    class Vertex Bb(3,1,2,'g');
+    class Vertex Cb(3,-1,2,'g');
+    class Vertex Db(1,-1,2,'g');
+
+    class Col side_col(255,255,0);
+    draw_line(Project_Vertex(Af),Project_Vertex(Bf),Af.Vertex_Col);
+    draw_line(Project_Vertex(Bf),Project_Vertex(Cf),Cf.Vertex_Col);
+    draw_line(Project_Vertex(Cf),Project_Vertex(Df),Df.Vertex_Col);
+    draw_line(Project_Vertex(Af),Project_Vertex(Df),Af.Vertex_Col);
+
+    draw_line(Project_Vertex(Ab),Project_Vertex(Bb),Bb.Vertex_Col);
+    draw_line(Project_Vertex(Bb),Project_Vertex(Cb),Cb.Vertex_Col);
+    draw_line(Project_Vertex(Cb),Project_Vertex(Db),Db.Vertex_Col);
+    draw_line(Project_Vertex(Ab),Project_Vertex(Db),Ab.Vertex_Col);
+
+    draw_line(Project_Vertex(Af),Project_Vertex(Ab),side_col);
+    draw_line(Project_Vertex(Bf),Project_Vertex(Bb),side_col);
+    draw_line(Project_Vertex(Cf),Project_Vertex(Cb),side_col);
+    draw_line(Project_Vertex(Df),Project_Vertex(Db),side_col);
+    //tries
+
+
+
+
+    /*class Vec3 p(20-200,-50,0);
     class Vec3 p1(-50-200,-100,0);
     class Vec3 p2(30-200,40,0);
     class Col c(100,255,255);
@@ -32,13 +69,23 @@ int main()
         //draw_line(p,p1,c1);
         //draw_line(p1,p2,c1);
         //draw_line(p2,p,c1);
-    }
+    }*/
     getch();
     closegraph();
     return 0;
 }
-
-
+class Vec3 Project_Vertex(class Vertex A)
+{
+A.Pos.x=(A.Pos.x*View_d)/A.Pos.z;
+A.Pos.y=(A.Pos.y*View_d)/A.Pos.z;
+return View_to_canvas(A.Pos);
+}
+class Vec3 View_to_canvas(class Vec3 A)
+{
+A.x=(Win_Width*A.x)/View_W;
+A.y=(Win_Height*A.y)/View_H;
+return A;
+};
 void draw_filled_tris(class Vec3 P0,class Vec3 P1,class Vec3 P2,class Col col)
 {
     class Vec3 X_left(0,0,0);

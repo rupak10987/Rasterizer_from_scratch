@@ -16,13 +16,14 @@
 1665195223 source:e:\projects\rasterizer_from_scratch\rasterizer_from_scratch\src\vec3.cpp
 	"Vec3.h"
 
-1666191376 source:e:\projects\rasterizer_from_scratch\rasterizer_from_scratch\source.cpp
+1666236663 source:e:\projects\rasterizer_from_scratch\rasterizer_from_scratch\source.cpp
 	<graphics.h>
 	<iostream>
 	<math.h>
 	"Vec3.h"
 	"Light_Source.h"
 	"Col.h"
+	"Vertex.h"
 
 1666190834 source:e:\projects\rasterizer_from_scratch\rasterizer_from_scratch\src\vertex.cpp
 	"Vertex.h"
