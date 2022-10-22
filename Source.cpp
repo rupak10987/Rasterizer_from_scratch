@@ -14,8 +14,8 @@ class Vec3 View_to_canvas(class Vec3 A);//scales up for the canvas
 class Vec3 normalized_to_screen_cord(int X,int Y);
 int Win_Width=500;
 int Win_Height=500;
-int View_H=5;
-int View_W=5;
+int View_H=15;
+int View_W=15;
 double View_d=1;
 int main()
 {
@@ -47,29 +47,7 @@ int main()
     draw_line(Project_Vertex(Bf),Project_Vertex(Bb),side_col);
     draw_line(Project_Vertex(Cf),Project_Vertex(Cb),side_col);
     draw_line(Project_Vertex(Df),Project_Vertex(Db),side_col);
-    //tries
 
-
-
-
-    /*class Vec3 p(20-200,-50,0);
-    class Vec3 p1(-50-200,-100,0);
-    class Vec3 p2(30-200,40,0);
-    class Col c(100,255,255);
-    class Col c1(255,255,0);
-    for(int i=0; i<5; i++)
-    {
-        p.x+=80;
-        p.y-=i*30;
-        p1.x+=80;
-        p1.y+=i*20;
-        p2.x+=80;
-        p2.y+=i*20;
-        draw_filled_tris(p,p1,p2,c1);
-        //draw_line(p,p1,c1);
-        //draw_line(p1,p2,c1);
-        //draw_line(p2,p,c1);
-    }*/
     getch();
     closegraph();
     return 0;
