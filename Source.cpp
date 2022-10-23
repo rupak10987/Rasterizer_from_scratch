@@ -16,8 +16,8 @@ class Vec3 View_to_canvas(class Vec3 A);//scales up for the canvas
 class Vec3 normalized_to_screen_cord(int X,int Y);
 int Win_Width=500;
 int Win_Height=500;
-int View_H=5;
-int View_W=5;
+int View_H=15;
+int View_W=15;
 double View_d=1;
 int main()
 {
@@ -25,45 +25,6 @@ int main()
     setcurrentwindow(win);
     class Model* mod=new Model();
     render_object(mod);
-
-    /*class Col c(255,255,0);
-    class Vec3 v0(-10,-10,2);
-    class Vec3 v1(10,-10,2);
-    class Vec3 v2(-10,10,2);
-    class Vec3 v3(10,10,2);
-    draw_line(v0,v1,c);
-    draw_line(v1,v2,c);
-    draw_line(v0,v2,c);
-
-    draw_line(v1,v3,c);
-    draw_line(v2,v3,c);*/
-   /* class Vertex Af(-1,1,1,'r');
-    class Vertex Bf(1,1,1,'r');
-    class Vertex Cf(1,-1,1,'r');
-    class Vertex Df(-1,-1,1,'r');
-
-    class Vertex Ab(1,1,2,'g');
-    class Vertex Bb(3,1,2,'g');
-    class Vertex Cb(3,-1,2,'g');
-    class Vertex Db(1,-1,2,'g');
-
-    class Col side_col(255,255,0);
-    draw_line(Project_Vertex(Af),Project_Vertex(Bf),Af.Vertex_Col);
-    draw_line(Project_Vertex(Bf),Project_Vertex(Cf),Cf.Vertex_Col);
-    draw_line(Project_Vertex(Cf),Project_Vertex(Df),Df.Vertex_Col);
-    draw_line(Project_Vertex(Af),Project_Vertex(Df),Af.Vertex_Col);
-
-    draw_line(Project_Vertex(Ab),Project_Vertex(Bb),Bb.Vertex_Col);
-    draw_line(Project_Vertex(Bb),Project_Vertex(Cb),Cb.Vertex_Col);
-    draw_line(Project_Vertex(Cb),Project_Vertex(Db),Db.Vertex_Col);
-    draw_line(Project_Vertex(Ab),Project_Vertex(Db),Ab.Vertex_Col);
-
-    draw_line(Project_Vertex(Af),Project_Vertex(Ab),side_col);
-    draw_line(Project_Vertex(Bf),Project_Vertex(Bb),side_col);
-    draw_line(Project_Vertex(Cf),Project_Vertex(Cb),side_col);
-    draw_line(Project_Vertex(Df),Project_Vertex(Db),side_col);*/
-
-
     getch();
     closegraph();
     return 0;
@@ -89,14 +50,16 @@ Projected[j]=temp;
 std::cout<<"x="<<Projected[j].x<<" y="<<Projected[j].y<<" z="<<Projected[j].z<<std::endl<<std::endl;
 j++;
 }
-
-for(int i=0;i<mod->Num_Indicies+3;i+=3)
-{
 class Col r(255,0,0);
+class Col y(0,255,255);
+for(int i=0;i<mod->Num_Indicies*3;i+=3)
+{
+draw_filled_tris(Projected[*(mod->Indicies+i)],Projected[*(mod->Indicies+i+1)],Projected[*(mod->Indicies+i+2)],y);
 draw_line(Projected[*(mod->Indicies+i)],Projected[*(mod->Indicies+i+1)],r);
 draw_line(Projected[*(mod->Indicies+i+1)],Projected[*(mod->Indicies+i+2)],r);
 draw_line(Projected[*(mod->Indicies+i)],Projected[*(mod->Indicies+i+2)],r);
 //std::cout<<Projected[*(mod->Indicies+i)].x<<" "<<Projected[*(mod->Indicies+i+1)].x<<" "<<Projected[*(mod->Indicies+i+2)].x<<std::endl;
+
 }
 }
 
