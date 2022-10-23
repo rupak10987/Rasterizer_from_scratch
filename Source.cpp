@@ -5,7 +5,9 @@
 #include"Light_Source.h"
 #include"Col.h"
 #include"Vertex.h"
+#include"Model.h"
 double Vals[500]= {0};
+void render_object(class Model* mod);
 void draw_filled_tris(class Vec3 P0,class Vec3 P1,class Vec3 P2,class Col col);
 void ineterpolate(double x0,double y0,double x1,double y1);
 void draw_line(class Vec3 P,class Vec3 P1,class Col col);
@@ -14,15 +16,28 @@ class Vec3 View_to_canvas(class Vec3 A);//scales up for the canvas
 class Vec3 normalized_to_screen_cord(int X,int Y);
 int Win_Width=500;
 int Win_Height=500;
-int View_H=15;
-int View_W=15;
+int View_H=5;
+int View_W=5;
 double View_d=1;
 int main()
 {
     int win=initwindow(Win_Width,Win_Height,(const char*)"RASTERIZER");
     setcurrentwindow(win);
+    class Model* mod=new Model();
+    render_object(mod);
 
-    class Vertex Af(-1,1,1,'r');
+    /*class Col c(255,255,0);
+    class Vec3 v0(-10,-10,2);
+    class Vec3 v1(10,-10,2);
+    class Vec3 v2(-10,10,2);
+    class Vec3 v3(10,10,2);
+    draw_line(v0,v1,c);
+    draw_line(v1,v2,c);
+    draw_line(v0,v2,c);
+
+    draw_line(v1,v3,c);
+    draw_line(v2,v3,c);*/
+   /* class Vertex Af(-1,1,1,'r');
     class Vertex Bf(1,1,1,'r');
     class Vertex Cf(1,-1,1,'r');
     class Vertex Df(-1,-1,1,'r');
@@ -46,24 +61,64 @@ int main()
     draw_line(Project_Vertex(Af),Project_Vertex(Ab),side_col);
     draw_line(Project_Vertex(Bf),Project_Vertex(Bb),side_col);
     draw_line(Project_Vertex(Cf),Project_Vertex(Cb),side_col);
-    draw_line(Project_Vertex(Df),Project_Vertex(Db),side_col);
+    draw_line(Project_Vertex(Df),Project_Vertex(Db),side_col);*/
+
 
     getch();
     closegraph();
     return 0;
 }
+
+
+
+void render_object(class Model* mod)
+{
+int j=0;
+class Vec3 Projected[(mod->Num_Verticies)];
+std::cout<<mod->Num_Verticies<<std::endl;
+for(int i=0;i<mod->Num_Verticies*3;i+=3)
+{
+Projected[j].x=(*(mod->Verticies+i));
+Projected[j].y=(*(mod->Verticies+1+i));
+Projected[j].z=(*(mod->Verticies+2+i));
+std::cout<<"x="<<Projected[j].x<<" y="<<Projected[j].y<<" z="<<Projected[j].z<<std::endl;
+class Vertex v(Projected[j].x,Projected[j].y,Projected[j].z,'g');
+class Vec3 temp;
+temp=Project_Vertex(v);
+Projected[j]=temp;
+std::cout<<"x="<<Projected[j].x<<" y="<<Projected[j].y<<" z="<<Projected[j].z<<std::endl<<std::endl;
+j++;
+}
+
+for(int i=0;i<mod->Num_Indicies+3;i+=3)
+{
+class Col r(255,0,0);
+draw_line(Projected[*(mod->Indicies+i)],Projected[*(mod->Indicies+i+1)],r);
+draw_line(Projected[*(mod->Indicies+i+1)],Projected[*(mod->Indicies+i+2)],r);
+draw_line(Projected[*(mod->Indicies+i)],Projected[*(mod->Indicies+i+2)],r);
+//std::cout<<Projected[*(mod->Indicies+i)].x<<" "<<Projected[*(mod->Indicies+i+1)].x<<" "<<Projected[*(mod->Indicies+i+2)].x<<std::endl;
+}
+}
+
+
+
+
 class Vec3 Project_Vertex(class Vertex A)
 {
 A.Pos.x=(A.Pos.x*View_d)/A.Pos.z;
 A.Pos.y=(A.Pos.y*View_d)/A.Pos.z;
 return View_to_canvas(A.Pos);
 }
+
+
 class Vec3 View_to_canvas(class Vec3 A)
 {
 A.x=(Win_Width*A.x)/View_W;
 A.y=(Win_Height*A.y)/View_H;
 return A;
-};
+}
+
+
 void draw_filled_tris(class Vec3 P0,class Vec3 P1,class Vec3 P2,class Col col)
 {
     class Vec3 X_left(0,0,0);
@@ -109,6 +164,7 @@ void draw_filled_tris(class Vec3 P0,class Vec3 P1,class Vec3 P2,class Col col)
 
 
 }
+
 
 void draw_line(class Vec3 P,class Vec3 P1,class Col col)
 {
