@@ -14,8 +14,8 @@ void draw_line(class Vec3 P,class Vec3 P1,class Col col);
 class Vec3 Project_Vertex(class Vertex A);
 class Vec3 View_to_canvas(class Vec3 A);//scales up for the canvas
 class Vec3 normalized_to_screen_cord(int X,int Y);
-int Win_Width=500;
-int Win_Height=500;
+int Win_Width=1080;
+int Win_Height=1080;
 int View_H=5;
 int View_W=5;
 double View_d=1;
@@ -41,6 +41,9 @@ for(int i=0;i<mod->Num_Verticies*3;i+=3)
 Projected[i/3].x=(*(mod->Verticies+i));
 Projected[i/3].y=(*(mod->Verticies+1+i));
 Projected[i/3].z=(*(mod->Verticies+2+i));
+
+class Vec3 t(0,0,3);
+Projected[i/3]=t.addition_Vec(Projected[i/3],t);
 std::cout<<"x="<<Projected[i/3].x<<" y="<<Projected[i/3].y<<" z="<<Projected[i/3].z<<std::endl;
 class Vertex v(Projected[i/3].x,Projected[i/3].y,Projected[i/3].z,'g');
 class Vec3 temp;
@@ -52,7 +55,7 @@ class Col y(0,255,255);
 for(int i=0;i<mod->Num_Indicies*3;i+=3)
 {
 class Col r(*(mod->cols+i),*(mod->cols+i+1),*(mod->cols+i+2));
-//draw_filled_tris(Projected[*(mod->Indicies+i)],Projected[*(mod->Indicies+i+1)],Projected[*(mod->Indicies+i+2)],r);
+draw_filled_tris(Projected[*(mod->Indicies+i)],Projected[*(mod->Indicies+i+1)],Projected[*(mod->Indicies+i+2)],r);
 draw_line(Projected[*(mod->Indicies+i)],Projected[*(mod->Indicies+i+1)],r);
 draw_line(Projected[*(mod->Indicies+i+1)],Projected[*(mod->Indicies+i+2)],r);
 draw_line(Projected[*(mod->Indicies+i)],Projected[*(mod->Indicies+i+2)],r);
