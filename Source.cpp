@@ -34,32 +34,29 @@ int main()
 
 void render_object(class Model* mod)
 {
-int j=0;
 class Vec3 Projected[(mod->Num_Verticies)];
 std::cout<<mod->Num_Verticies<<std::endl;
 for(int i=0;i<mod->Num_Verticies*3;i+=3)
 {
-Projected[j].x=(*(mod->Verticies+i));
-Projected[j].y=(*(mod->Verticies+1+i));
-Projected[j].z=(*(mod->Verticies+2+i));
-std::cout<<"x="<<Projected[j].x<<" y="<<Projected[j].y<<" z="<<Projected[j].z<<std::endl;
-class Vertex v(Projected[j].x,Projected[j].y,Projected[j].z,'g');
+Projected[i/3].x=(*(mod->Verticies+i));
+Projected[i/3].y=(*(mod->Verticies+1+i));
+Projected[i/3].z=(*(mod->Verticies+2+i));
+std::cout<<"x="<<Projected[i/3].x<<" y="<<Projected[i/3].y<<" z="<<Projected[i/3].z<<std::endl;
+class Vertex v(Projected[i/3].x,Projected[i/3].y,Projected[i/3].z,'g');
 class Vec3 temp;
 temp=Project_Vertex(v);
-Projected[j]=temp;
-std::cout<<"x="<<Projected[j].x<<" y="<<Projected[j].y<<" z="<<Projected[j].z<<std::endl<<std::endl;
-j++;
+Projected[i/3]=temp;
+std::cout<<"x="<<Projected[i/3].x<<" y="<<Projected[i/3].y<<" z="<<Projected[i/3].z<<std::endl<<std::endl;
 }
-class Col r(255,0,0);
 class Col y(0,255,255);
 for(int i=0;i<mod->Num_Indicies*3;i+=3)
 {
-draw_filled_tris(Projected[*(mod->Indicies+i)],Projected[*(mod->Indicies+i+1)],Projected[*(mod->Indicies+i+2)],y);
+class Col r(*(mod->cols+i),*(mod->cols+i+1),*(mod->cols+i+2));
+//draw_filled_tris(Projected[*(mod->Indicies+i)],Projected[*(mod->Indicies+i+1)],Projected[*(mod->Indicies+i+2)],y);
 draw_line(Projected[*(mod->Indicies+i)],Projected[*(mod->Indicies+i+1)],r);
 draw_line(Projected[*(mod->Indicies+i+1)],Projected[*(mod->Indicies+i+2)],r);
 draw_line(Projected[*(mod->Indicies+i)],Projected[*(mod->Indicies+i+2)],r);
 //std::cout<<Projected[*(mod->Indicies+i)].x<<" "<<Projected[*(mod->Indicies+i+1)].x<<" "<<Projected[*(mod->Indicies+i+2)].x<<std::endl;
-
 }
 }
 

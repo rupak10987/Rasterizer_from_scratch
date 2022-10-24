@@ -11,6 +11,7 @@ class Model
         int Num_Indicies;//num of faces
         double* Verticies;
         int* Indicies;
+        double* cols;
         virtual ~Model();
 
     protected:
