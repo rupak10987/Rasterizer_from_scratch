@@ -55,7 +55,7 @@ class Col y(0,255,255);
 for(int i=0;i<mod->Num_Indicies*3;i+=3)
 {
 class Col r(*(mod->cols+i),*(mod->cols+i+1),*(mod->cols+i+2));
-draw_filled_tris(Projected[*(mod->Indicies+i)],Projected[*(mod->Indicies+i+1)],Projected[*(mod->Indicies+i+2)],r);
+//draw_filled_tris(Projected[*(mod->Indicies+i)],Projected[*(mod->Indicies+i+1)],Projected[*(mod->Indicies+i+2)],r);
 draw_line(Projected[*(mod->Indicies+i)],Projected[*(mod->Indicies+i+1)],r);
 draw_line(Projected[*(mod->Indicies+i+1)],Projected[*(mod->Indicies+i+2)],r);
 draw_line(Projected[*(mod->Indicies+i)],Projected[*(mod->Indicies+i+2)],r);
