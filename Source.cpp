@@ -6,6 +6,7 @@
 #include"Col.h"
 #include"Vertex.h"
 #include"Model.h"
+#include"Matrix.h"
 double Vals[500]= {0};
 void render_object(class Model* mod);
 void draw_filled_tris(class Vec3 P0,class Vec3 P1,class Vec3 P2,class Col col);
@@ -21,6 +22,7 @@ int View_W=5;
 double View_d=1;
 int main()
 {
+    std::cout<<"matrix = "<<Matrix::check(2);
     int win=initwindow(Win_Width,Win_Height,(const char*)"RASTERIZER");
     setcurrentwindow(win);
     class Model* mod=new Model();
@@ -35,7 +37,7 @@ int main()
 void render_object(class Model* mod)
 {
 class Vec3 Projected[(mod->Num_Verticies)];
-std::cout<<mod->Num_Verticies<<std::endl;
+//std::cout<<mod->Num_Verticies<<std::endl;
 for(int i=0;i<mod->Num_Verticies*3;i+=3)
 {
 Projected[i/3].x=(*(mod->Verticies+i));
@@ -44,18 +46,18 @@ Projected[i/3].z=(*(mod->Verticies+2+i));
 
 class Vec3 t(0,0,3);
 Projected[i/3]=t.addition_Vec(Projected[i/3],t);
-std::cout<<"x="<<Projected[i/3].x<<" y="<<Projected[i/3].y<<" z="<<Projected[i/3].z<<std::endl;
+//std::cout<<"x="<<Projected[i/3].x<<" y="<<Projected[i/3].y<<" z="<<Projected[i/3].z<<std::endl;
 class Vertex v(Projected[i/3].x,Projected[i/3].y,Projected[i/3].z,'g');
 class Vec3 temp;
 temp=Project_Vertex(v);
 Projected[i/3]=temp;
-std::cout<<"x="<<Projected[i/3].x<<" y="<<Projected[i/3].y<<" z="<<Projected[i/3].z<<std::endl<<std::endl;
+//std::cout<<"x="<<Projected[i/3].x<<" y="<<Projected[i/3].y<<" z="<<Projected[i/3].z<<std::endl<<std::endl;
 }
 class Col y(0,255,255);
 for(int i=0;i<mod->Num_Indicies*3;i+=3)
 {
 class Col r(*(mod->cols+i),*(mod->cols+i+1),*(mod->cols+i+2));
-//draw_filled_tris(Projected[*(mod->Indicies+i)],Projected[*(mod->Indicies+i+1)],Projected[*(mod->Indicies+i+2)],r);
+draw_filled_tris(Projected[*(mod->Indicies+i)],Projected[*(mod->Indicies+i+1)],Projected[*(mod->Indicies+i+2)],r);
 draw_line(Projected[*(mod->Indicies+i)],Projected[*(mod->Indicies+i+1)],r);
 draw_line(Projected[*(mod->Indicies+i+1)],Projected[*(mod->Indicies+i+2)],r);
 draw_line(Projected[*(mod->Indicies+i)],Projected[*(mod->Indicies+i+2)],r);
