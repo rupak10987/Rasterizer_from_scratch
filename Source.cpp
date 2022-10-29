@@ -22,7 +22,7 @@ int View_W=5;
 double View_d=1;
 int main()
 {
-    std::cout<<"matrix = "<<Matrix::check(2);
+    Matrix::Matrix_Multiplication(4,4,4,1);
     int win=initwindow(Win_Width,Win_Height,(const char*)"RASTERIZER");
     setcurrentwindow(win);
     class Model* mod=new Model();
