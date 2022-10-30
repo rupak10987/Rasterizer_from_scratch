@@ -7,6 +7,7 @@
 #include"Vertex.h"
 #include"Model.h"
 #include"Matrix.h"
+double z_buff[1080][1080]={1000};
 double Vals[500]= {0};
 void render_object(class Model* mod);
 void draw_filled_tris(class Vec3 P0,class Vec3 P1,class Vec3 P2,class Col col);
@@ -17,11 +18,13 @@ class Vec3 View_to_canvas(class Vec3 A);//scales up for the canvas
 class Vec3 normalized_to_screen_cord(int X,int Y);
 int Win_Width=1080;
 int Win_Height=1080;
-int View_H=2;
-int View_W=2;
+int View_H=1;
+int View_W=1;
 double View_d=1;
 int main()
 {
+
+
     //Matrix::Matrix_Multiplication(4,4,4,1);
     int win=initwindow(Win_Width,Win_Height,(const char*)"RASTERIZER");
     setcurrentwindow(win);
@@ -61,7 +64,7 @@ class Col r(*(mod->cols+i),*(mod->cols+i+1),*(mod->cols+i+2));
 draw_filled_tris(Projected[*(mod->Indicies+i)],Projected[*(mod->Indicies+i+1)],Projected[*(mod->Indicies+i+2)],r);
 }
 //drawing the lines as overlay
-class Col y(100,100,100);
+class Col y(255,255,255);
 for(int i=0;i<mod->Num_Indicies*3;i+=3)
 {
 draw_line(Projected[*(mod->Indicies+i)],Projected[*(mod->Indicies+i+1)],y);
