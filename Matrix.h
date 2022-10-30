@@ -8,13 +8,19 @@ double check(double a)
     a*=2;
     return a;
 }
-class Vec3 Matrix_Multiplication(double**matA,double**matB,int rowA,int collumnA,int rowB,int collumnB)
+double** Matrix_Multiplication(double**matA,double**matB,int rowA,int collumnA,int rowB,int collumnB)
 {
-    double MAT[4][1]={0};
+    double **MAT;
+    MAT=new double*[rowA];
+    for(int i=0;i<rowA;i++)
+    MAT[i]=new double[collumnB];
+    for(int i=0;i<rowA;i++)
+    for(int j=0;j<collumnB;j++)
+    MAT[i][j]=0;
+
     if(collumnA!=rowB)
     {
-        class Vec3 new_vec;
-        return new_vec;
+        return MAT;
     }
 
     for(int i=0;i<rowA;i++)
@@ -25,22 +31,26 @@ class Vec3 Matrix_Multiplication(double**matA,double**matB,int rowA,int collumnA
         MAT[i][j]+=matA[i][k]*matB[k][j];
         }
     }
-    class Vec3 new_vec(MAT[0][0],MAT[1][0],MAT[2][0]);
-    return new_vec;
+return MAT;
 }
 class Vec3 Transform(class Vec3 pos, class Vec3 Scale,class Vec3 Rot,class Vec3 translate)
 {
-//scale
-double scale_mat[4][4]={{Scale.x,0,0,0},
-                        {0,Scale.y,0,0},
-                        {0,0,Scale.z,0},
-                        {0,0,0,1}};
-
-double rot_mat_z[4][4]={{cos(rot.z),sin(rot.z),0,0},
-                        {-sin(rot.z),cos(rot.z),0,0},
-                        {0,0,1,0},
-                        {0,0,0,1}};
-                        Matrix_Multiplication(rot_mat_z,scale_mat,4,4,4,4);
+double **scale_mat;
+double **rot_mat;
+double **Transform_mat;
+scale_mat=new double*[4];
+rot_mat=new double*[4];//z axis only for now
+Transform_mat=new double*[4];
+for(int i=0;i<4;i++)
+{
+    scale_mat[i]=new double[4];
+    rot_mat[i]=new double[4];
+    Transform_mat[i]=new double[4];
+}
+double **result_mat=Matrix_Multiplication(rot_mat,scale_mat,4,4,4,4);
+result_mat=Matrix_Multiplication(Transform_mat,result_mat,4,4,4,4);
+class Vec3 rv(result_mat[0][0],result_mat[0][1],result_mat[0][2]);
+return rv;
 }
 };
 //the function will be called like this transform matrix 4by 4 er ekta which will take the parameter

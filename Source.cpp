@@ -96,6 +96,9 @@ void draw_filled_tris(class Vec3 P0,class Vec3 P1,class Vec3 P2,class Col col)
     if(P1.y>P2.y)
         draw_filled_tris(P0,P2,P1,col);
 
+    //if the triangle is like a st line do nothing
+    if((int)P2.y-(int)P0.y<=0)
+        return;
 //calculate the x's for a y
     for(int i=(int)P0.y; i<(int)P2.y; i++)
     {
@@ -108,7 +111,7 @@ void draw_filled_tris(class Vec3 P0,class Vec3 P1,class Vec3 P2,class Col col)
             X_left.x=b+a*i;
             X_left.y=i;
         }
-        else//p1-p2
+        else if(i>=P1.y && i<=P2.y)//p1-p2
         {
 //calculate x for p1-p2
             double a=(P2.x-P1.x)/(P2.y-P1.y);
