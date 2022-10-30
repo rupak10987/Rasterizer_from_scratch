@@ -18,9 +18,9 @@ class Vec3 View_to_canvas(class Vec3 A);//scales up for the canvas
 class Vec3 normalized_to_screen_cord(int X,int Y);
 int Win_Width=1080;
 int Win_Height=1080;
-int View_H=5;
-int View_W=5;
-double View_d=3;
+int View_H=1;
+int View_W=1;
+double View_d=1;
 int main()
 {
 
@@ -64,14 +64,15 @@ class Col r(*(mod->cols+i),*(mod->cols+i+1),*(mod->cols+i+2));
 draw_filled_tris(Projected[*(mod->Indicies+i)],Projected[*(mod->Indicies+i+1)],Projected[*(mod->Indicies+i+2)],r);
 }
 //drawing the lines as overlay
-/*class Col y(255,255,255);
+class Col y(255,255,255);
 for(int i=0;i<mod->Num_Indicies*3;i+=3)
 {
-draw_line(Projected[*(mod->Indicies+i)],Projected[*(mod->Indicies+i+1)],y);
-draw_line(Projected[*(mod->Indicies+i+1)],Projected[*(mod->Indicies+i+2)],y);
-draw_line(Projected[*(mod->Indicies+i)],Projected[*(mod->Indicies+i+2)],y);
+class Col r(*(mod->cols+i),*(mod->cols+i+1),*(mod->cols+i+2));
+draw_line(Projected[*(mod->Indicies+i)],Projected[*(mod->Indicies+i+1)],r);
+draw_line(Projected[*(mod->Indicies+i+1)],Projected[*(mod->Indicies+i+2)],r);
+draw_line(Projected[*(mod->Indicies+i)],Projected[*(mod->Indicies+i+2)],r);
 //std::cout<<Projected[*(mod->Indicies+i)].x<<" "<<Projected[*(mod->Indicies+i+1)].x<<" "<<Projected[*(mod->Indicies+i+2)].x<<std::endl;
-}*/
+}
 }
 
 
@@ -105,9 +106,14 @@ void draw_filled_tris(class Vec3 P0,class Vec3 P1,class Vec3 P2,class Col col)
     if(P1.y>P2.y)
         draw_filled_tris(P0,P2,P1,col);
 
-    //if the triangle is like a st line do nothing
-    if((int)P2.y-(int)P0.y<=0)
-        return;
+//if the triangle is like a st line do nothing
+    double a_side=P1.Length(P1.Direction_Vec(P1,P0));
+    double b_side=P1.Length(P1.Direction_Vec(P2,P1));
+    double c_side=P1.Length(P1.Direction_Vec(P2,P0));
+    double length=a_side+b_side+c_side;
+    if(length<=a_side+b_side || length<=b_side+c_side || length<=a_side+c_side)
+    return;
+
 //calculate the x's for a y
     for(int i=(int)P0.y; i<(int)P2.y; i++)
     {
@@ -135,6 +141,13 @@ void draw_filled_tris(class Vec3 P0,class Vec3 P1,class Vec3 P2,class Col col)
         X_right.y=i;
 
 //draw the horizontal lines
+        if(X_left.x>X_right.x)
+        {
+            class Vec3 temp;
+            temp=X_left;
+            X_left=X_right;
+            X_right=temp;
+        }
         draw_line(X_left,X_right,col);
 
     }

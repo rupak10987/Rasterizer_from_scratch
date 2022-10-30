@@ -78,3 +78,7 @@ double Vec3::clac_xy_slope(class Vec3 A)
 {
     return A.y/A.x;
 }
+double Vec3::Length(class Vec3 A)
+{
+    return sqrt(A.DOT_PRODUCT(A,A));
+}
