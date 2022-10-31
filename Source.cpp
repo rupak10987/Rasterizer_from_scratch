@@ -20,7 +20,7 @@ int Win_Width=1080;
 int Win_Height=1080;
 int View_H=1;
 int View_W=1;
-double View_d=1;
+double View_d=2;
 int main()
 {
 
@@ -148,6 +148,8 @@ void draw_filled_tris(class Vec3 P0,class Vec3 P1,class Vec3 P2,class Col col)
             X_left=X_right;
             X_right=temp;
         }
+        if((X_left.x==0 && X_left.y==0)||(X_right.x==0 && X_right.y==0))//donno what the problem was.. terminated for the condition
+            continue;
         draw_line(X_left,X_right,col);
 
     }
