@@ -16,7 +16,7 @@
 1667154809 source:e:\projects\rasterizer_from_scratch\rasterizer_from_scratch\src\vec3.cpp
 	"Vec3.h"
 
-1667181728 source:e:\projects\rasterizer_from_scratch\rasterizer_from_scratch\source.cpp
+1667184333 source:e:\projects\rasterizer_from_scratch\rasterizer_from_scratch\source.cpp
 	<graphics.h>
 	<iostream>
 	<math.h>
@@ -34,7 +34,7 @@
 	"Vec3.h"
 	"Col.h"
 
-1667181905 source:e:\projects\rasterizer_from_scratch\rasterizer_from_scratch\src\model.cpp
+1667184148 source:e:\projects\rasterizer_from_scratch\rasterizer_from_scratch\src\model.cpp
 	"Model.h"
 
 1666586791 e:\projects\rasterizer_from_scratch\rasterizer_from_scratch\include\model.h

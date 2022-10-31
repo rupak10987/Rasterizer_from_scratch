@@ -18,8 +18,8 @@ class Vec3 View_to_canvas(class Vec3 A);//scales up for the canvas
 class Vec3 normalized_to_screen_cord(int X,int Y);
 int Win_Width=1080;
 int Win_Height=1080;
-int View_H=1;
-int View_W=1;
+int View_H=5;
+int View_W=5;
 double View_d=2;
 int main()
 {
@@ -45,7 +45,7 @@ for(int i=0;i<mod->Num_Verticies*3;i+=3)
 {
 Projected[i/3].x=(*(mod->Verticies+i));
 Projected[i/3].y=(*(mod->Verticies+1+i));
-Projected[i/3].z=(*(mod->Verticies+2+i));
+Projected[i/3].z=(*(mod->Verticies+2+i))+1;
 
 class Vec3 t(0,0,3);
 Projected[i/3]=t.addition_Vec(Projected[i/3],t);
@@ -68,9 +68,9 @@ class Col y(255,255,255);
 for(int i=0;i<mod->Num_Indicies*3;i+=3)
 {
 class Col r(*(mod->cols+i),*(mod->cols+i+1),*(mod->cols+i+2));
-draw_line(Projected[*(mod->Indicies+i)],Projected[*(mod->Indicies+i+1)],r);
-draw_line(Projected[*(mod->Indicies+i+1)],Projected[*(mod->Indicies+i+2)],r);
-draw_line(Projected[*(mod->Indicies+i)],Projected[*(mod->Indicies+i+2)],r);
+draw_line(Projected[*(mod->Indicies+i)],Projected[*(mod->Indicies+i+1)],y);
+draw_line(Projected[*(mod->Indicies+i+1)],Projected[*(mod->Indicies+i+2)],y);
+draw_line(Projected[*(mod->Indicies+i)],Projected[*(mod->Indicies+i+2)],y);
 //std::cout<<Projected[*(mod->Indicies+i)].x<<" "<<Projected[*(mod->Indicies+i+1)].x<<" "<<Projected[*(mod->Indicies+i+2)].x<<std::endl;
 }
 }
@@ -135,10 +135,13 @@ void draw_filled_tris(class Vec3 P0,class Vec3 P1,class Vec3 P2,class Col col)
             X_left.y=i;
         }
 //calculate x for p0-p2
+        if(i>=P0.y && i<=P2.y)
+        {
         double a=(P2.x-P0.x)/(P2.y-P0.y);
         double b=P0.x-(a*P0.y);
         X_right.x=b+a*i;
         X_right.y=i;
+        }
 
 //draw the horizontal lines
         if(X_left.x>X_right.x)
