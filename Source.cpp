@@ -45,7 +45,7 @@ for(int i=0;i<mod->Num_Verticies*3;i+=3)
 {
 Projected[i/3].x=(*(mod->Verticies+i));
 Projected[i/3].y=(*(mod->Verticies+1+i));
-Projected[i/3].z=(*(mod->Verticies+2+i))+1;
+Projected[i/3].z=(*(mod->Verticies+2+i))+20;
 
 class Vec3 t(0,0,3);
 Projected[i/3]=t.addition_Vec(Projected[i/3],t);
