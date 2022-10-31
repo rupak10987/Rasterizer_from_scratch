@@ -58,11 +58,11 @@ Projected[i/3]=temp;
 }
 //drawing the faces
 
-for(int i=0;i<mod->Num_Indicies*3;i+=3)
+/*for(int i=0;i<mod->Num_Indicies*3;i+=3)
 {
 class Col r(*(mod->cols+i),*(mod->cols+i+1),*(mod->cols+i+2));
 draw_filled_tris(Projected[*(mod->Indicies+i)],Projected[*(mod->Indicies+i+1)],Projected[*(mod->Indicies+i+2)],r);
-}
+}*/
 //drawing the lines as overlay
 class Col y(155,155,155);
 for(int i=0;i<mod->Num_Indicies*3;i+=3)
