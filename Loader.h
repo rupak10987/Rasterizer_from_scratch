@@ -6,10 +6,6 @@ namespace MESH
 void load_obj_data(char* filePath,double* vertex,int *num_vertex,int* index,int *num_index,double* color)
 {
     int elements_counted=0;
-    //*num_vertex=4;
-    //*num_index=1;
-    //vertex=new double[(*num_vertex)*3];
-   // index=new double[(*num_index)*3];
     int local_vertex_count=*num_vertex*3;
     int local_index_count=*num_index*3;
     int local_col_count=*num_index*3;
@@ -62,7 +58,7 @@ void load_obj_data(char* filePath,double* vertex,int *num_vertex,int* index,int 
                     else//any other charecter ,
                     {
 
-                            reading_alphabets=true;
+                        reading_alphabets=true;
                         stack_top--;
                         stack_max--;
                         for(int i=stack_top; i>=0; i--) //stack
@@ -83,22 +79,22 @@ void load_obj_data(char* filePath,double* vertex,int *num_vertex,int* index,int 
                         elements_counted+=1;
                         if(elements_counted>2)
                         {
-                        //std::cout<<num<<std::endl;
-                        if(local_vertex_count>=0)
-                        {
-                        vertex[(*num_vertex)*3-local_vertex_count]=num;
-                        local_vertex_count--;
-                        }
-                        if(local_index_count>0 && local_vertex_count<0)
-                        {
-                        index[(*num_index)*3-local_index_count]=(int)num;
-                        local_index_count--;
-                        }
-                        else if(local_col_count>0 && local_vertex_count<0 && local_index_count<=0)
-                        {
-                        color[(*num_index)*3-local_col_count]=num;
-                        local_col_count--;
-                        }
+                            //std::cout<<num<<std::endl;
+                            if(local_vertex_count>=0)
+                            {
+                                vertex[(*num_vertex)*3-local_vertex_count]=num;
+                                local_vertex_count--;
+                            }
+                            if(local_index_count>0 && local_vertex_count<0)
+                            {
+                                index[(*num_index)*3-local_index_count]=(int)num;
+                                local_index_count--;
+                            }
+                            else if(local_col_count>0 && local_vertex_count<0 && local_index_count<=0)
+                            {
+                                color[(*num_index)*3-local_col_count]=num;
+                                local_col_count--;
+                            }
                         }
 //reinitialize quee and stack
                         stack_top=0;
@@ -128,7 +124,7 @@ void load_obj_data(char* filePath,double* vertex,int *num_vertex,int* index,int 
                     else//any other charecter
                     {
 
-                            read_deci=true;
+                        read_deci=true;
                         reading_alphabets=true;
                         stack_top--;
                         stack_max--;
@@ -153,22 +149,22 @@ void load_obj_data(char* filePath,double* vertex,int *num_vertex,int* index,int 
                         elements_counted+=1;
                         if(elements_counted>2)
                         {
-                        //std::cout<<num<<std::endl;
-                        if(local_vertex_count>0)
-                        {
-                        vertex[(*num_vertex)*3-local_vertex_count]=num;
-                        local_vertex_count--;
-                        }
-                        if(local_index_count>0 && local_vertex_count<0)
-                        {
-                            index[(*num_index)*3-local_index_count]=(int)num;
-                        local_index_count--;
-                        }
-                        else if(local_col_count>0 && local_vertex_count<0 && local_index_count<=0)
-                        {
-                        color[(*num_index)*3-local_col_count]=num;
-                        local_col_count--;
-                        }
+                            //std::cout<<num<<std::endl;
+                            if(local_vertex_count>0)
+                            {
+                                vertex[(*num_vertex)*3-local_vertex_count]=num;
+                                local_vertex_count--;
+                            }
+                            if(local_index_count>0 && local_vertex_count<0)
+                            {
+                                index[(*num_index)*3-local_index_count]=(int)num;
+                                local_index_count--;
+                            }
+                            else if(local_col_count>0 && local_vertex_count<0 && local_index_count<=0)
+                            {
+                                color[(*num_index)*3-local_col_count]=num;
+                                local_col_count--;
+                            }
                         }
 
 

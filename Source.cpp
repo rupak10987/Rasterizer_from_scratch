@@ -20,7 +20,7 @@ int Win_Width=500;
 int Win_Height=500;
 int View_H=2;
 int View_W=2;
-double View_d=4;
+double View_d=2;
 int main()
 {
 
@@ -28,7 +28,9 @@ int main()
     //Matrix::Matrix_Multiplication(4,4,4,1);
     int win=initwindow(Win_Width,Win_Height,(const char*)"RASTERIZER");
     setcurrentwindow(win);
-    class Model* mod=new Model("grid.rpk");
+    class Model* mod=new Model("3D_Models/frog.txt");
+    class Model* mod1=new Model();
+    render_object(mod1);
     render_object(mod);
     getch();
     closegraph();
@@ -58,11 +60,11 @@ Projected[i/3]=temp;
 }
 //drawing the faces
 
-/*for(int i=0;i<mod->Num_Indicies*3;i+=3)
+for(int i=0;i<mod->Num_Indicies*3;i+=3)
 {
 class Col r(*(mod->cols+i),*(mod->cols+i+1),*(mod->cols+i+2));
 draw_filled_tris(Projected[*(mod->Indicies+i)],Projected[*(mod->Indicies+i+1)],Projected[*(mod->Indicies+i+2)],r);
-}*/
+}
 //drawing the lines as overlay
 class Col y(155,155,155);
 for(int i=0;i<mod->Num_Indicies*3;i+=3)
