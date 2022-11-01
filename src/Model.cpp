@@ -4,6 +4,8 @@
 Model::Model(char* filepath)
 {
     //ctor
+    class Vec3 gp(0,0,20);
+    this->Global_Pos=gp;
 MESH::load_Array_sizes(filepath,&Num_Verticies,&Num_Indicies);
 this->Verticies=new double[Num_Verticies*3];
 this->Indicies=new int[Num_Indicies*3];
@@ -14,6 +16,8 @@ MESH::load_obj_data(filepath,Verticies,&Num_Verticies,Indicies,&Num_Indicies,col
 
 Model::Model()//ann icosphere
 {
+    class Vec3 gp(0,0,1);
+    this->Global_Pos=gp;
     //ctor
     this->Num_Indicies=12;//num of faces
     this->Num_Verticies=8;

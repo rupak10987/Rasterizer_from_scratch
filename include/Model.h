@@ -1,6 +1,6 @@
 #ifndef MODEL_H
 #define MODEL_H
-
+#include"Vec3.h"
 class Model
 {
     public:
@@ -12,6 +12,9 @@ class Model
         int* Indicies;
         double* cols;
         virtual ~Model();
+        class Vec3 Global_Pos;
+        class Vec3 Rotation;
+        class Vec3 Scale;
 
     protected:
 

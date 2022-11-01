@@ -30,7 +30,7 @@ int main()
     setcurrentwindow(win);
     class Model* mod=new Model("3D_Models/frog.txt");
     class Model* mod1=new Model();
-    render_object(mod1);
+    render_object(mod);
     //render_object(mod);
     getch();
     closegraph();
@@ -45,9 +45,9 @@ class Vec3 Projected[(mod->Num_Verticies)];
 //std::cout<<mod->Num_Verticies<<std::endl;
 for(int i=0;i<mod->Num_Verticies*3;i+=3)
 {
-Projected[i/3].x=(*(mod->Verticies+i));
-Projected[i/3].y=(*(mod->Verticies+1+i));
-Projected[i/3].z=(*(mod->Verticies+2+i))+10;
+Projected[i/3].x=(*(mod->Verticies+i))+mod->Global_Pos.x;
+Projected[i/3].y=(*(mod->Verticies+1+i))+mod->Global_Pos.y;
+Projected[i/3].z=(*(mod->Verticies+2+i))+mod->Global_Pos.z;
 
 class Vec3 t(0,0,3);
 Projected[i/3]=t.addition_Vec(Projected[i/3],t);
@@ -60,11 +60,11 @@ Projected[i/3]=temp;
 }
 //drawing the faces
 
-/*for(int i=0;i<mod->Num_Indicies*3;i+=3)
+for(int i=0;i<mod->Num_Indicies*3;i+=3)
 {
 class Col r(*(mod->cols+i),*(mod->cols+i+1),*(mod->cols+i+2));
 draw_filled_tris(Projected[*(mod->Indicies+i)],Projected[*(mod->Indicies+i+1)],Projected[*(mod->Indicies+i+2)],r);
-}*/
+}
 //drawing the lines as overlay
 class Col y(155,155,155);
 for(int i=0;i<mod->Num_Indicies*3;i+=3)
