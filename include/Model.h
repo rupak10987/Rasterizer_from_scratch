@@ -1,12 +1,11 @@
 #ifndef MODEL_H
 #define MODEL_H
 
-
 class Model
 {
     public:
         Model();
-        Model(char* str);
+        Model(char* filepath);
         int Num_Verticies;//num of distinct positions in xyz space
         int Num_Indicies;//num of faces
         double* Verticies;

@@ -33,6 +33,7 @@
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
+		<Unit filename="Loader.h" />
 		<Unit filename="Matrix.h" />
 		<Unit filename="Source.cpp" />
 		<Unit filename="include/Col.h" />

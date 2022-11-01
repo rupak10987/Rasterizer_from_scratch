@@ -20,7 +20,7 @@ int Win_Width=500;
 int Win_Height=500;
 int View_H=2;
 int View_W=2;
-double View_d=1.5;
+double View_d=4;
 int main()
 {
 
@@ -28,7 +28,7 @@ int main()
     //Matrix::Matrix_Multiplication(4,4,4,1);
     int win=initwindow(Win_Width,Win_Height,(const char*)"RASTERIZER");
     setcurrentwindow(win);
-    class Model* mod=new Model();
+    class Model* mod=new Model("grid.rpk");
     render_object(mod);
     getch();
     closegraph();

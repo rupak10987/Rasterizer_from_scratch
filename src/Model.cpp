@@ -1,9 +1,14 @@
 #include "Model.h"
-Model::Model(char* str)
+#include<../Loader.h>
+
+Model::Model(char* filepath)
 {
     //ctor
-
-
+MESH::load_Array_sizes(filepath,&Num_Verticies,&Num_Indicies);
+this->Verticies=new double[Num_Verticies*3];
+this->Indicies=new int[Num_Indicies*3];
+this->cols=new double[Num_Indicies*3];
+MESH::load_obj_data(filepath,Verticies,&Num_Verticies,Indicies,&Num_Indicies,cols);
 }
 
 
@@ -8588,4 +8593,5 @@ for(int i=0;i<Num_Indicies*3;i++)
 Model::~Model()
 {
     //dtor
+
 }
