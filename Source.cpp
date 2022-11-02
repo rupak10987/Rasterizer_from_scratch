@@ -16,8 +16,8 @@ void draw_line(class Vec3 P,class Vec3 P1,class Col col);
 class Vec3 Project_Vertex(class Vertex A);
 class Vec3 View_to_canvas(class Vec3 A);//scales up for the canvas
 class Vec3 normalized_to_screen_cord(int X,int Y);
-int Win_Width=500;
-int Win_Height=500;
+int Win_Width=700;
+int Win_Height=700;
 int View_H=2;
 int View_W=2;
 double View_d=2;
@@ -83,7 +83,7 @@ draw_line(Projected[*(mod->Indicies+i)],Projected[*(mod->Indicies+i+2)],r);
 class Vec3 Project_Vertex(class Vertex A)
 {
 A.Pos.x=(A.Pos.x*View_d)/A.Pos.z;
-A.Pos.y=(A.Pos.y*View_d)/(A.Pos.z);
+A.Pos.y=((double)Win_Width/(double)Win_Height)*(A.Pos.y*View_d)/(A.Pos.z);
 return View_to_canvas(A.Pos);
 }
 
