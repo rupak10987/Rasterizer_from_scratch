@@ -9,16 +9,16 @@
 #include"Matrix.h"
 double **z_buff;
 double Vals[500]= {0};
-double set_z_buff(int i,int y,class Vec3 P0,class Vec3 P1);
-void render_object(class Model* mod);
+double calc_intermedizte_z(int i,class Vec3 P,class Vec3 P1);
+void render_object(class Model* mod,bool render_faces,bool render_wireframe);
 void draw_filled_tris(class Vec3 P0,class Vec3 P1,class Vec3 P2,class Col col);
 void ineterpolate(double x0,double y0,double x1,double y1);
 void draw_line(class Vec3 P,class Vec3 P1,class Col col);
 class Vec3 Project_Vertex(class Vertex A);
 class Vec3 View_to_canvas(class Vec3 A);//scales up for the canvas
 class Vec3 normalized_to_screen_cord(int X,int Y);
-int Win_Width=700;
-int Win_Height=700;
+int Win_Width=500;
+int Win_Height=500;
 int View_H=2;
 int View_W=2;
 double View_d=2;
@@ -30,14 +30,14 @@ for(int i=0;i<=Win_Height;i++)
 z_buff[i]=new double[Win_Width+1];
 for(int i=0;i<=Win_Height;i++)
 for(int j=0;j<=Win_Width;j++)
-z_buff[i][j]=100;
+z_buff[i][j]=1000;
 
     //Matrix::Matrix_Multiplication(4,4,4,1);
     int win=initwindow(Win_Width,Win_Height,(const char*)"RASTERIZER");
     setcurrentwindow(win);
     class Model* mod=new Model("3D_Models/frog.txt");
     class Model* mod1=new Model();
-    render_object(mod);
+    render_object(mod,true,true);
     //render_object(mod);
     getch();
     closegraph();
@@ -46,7 +46,7 @@ z_buff[i][j]=100;
 
 
 
-void render_object(class Model* mod)
+void render_object(class Model* mod,bool render_faces,bool render_wireframe)
 {
 class Vec3 Projected[(mod->Num_Verticies)];
 //std::cout<<mod->Num_Verticies<<std::endl;
@@ -66,22 +66,28 @@ Projected[i/3]=temp;
 //std::cout<<"x="<<Projected[i/3].x<<" y="<<Projected[i/3].y<<" z="<<Projected[i/3].z<<std::endl<<std::endl;
 }
 //drawing the faces
-
-for(int i=0;i<mod->Num_Indicies*3;i+=3)
+if(render_faces)
+{
+ for(int i=0;i<mod->Num_Indicies*3;i+=3)
 {
 class Col r(*(mod->cols+i),*(mod->cols+i+1),*(mod->cols+i+2));
 draw_filled_tris(Projected[*(mod->Indicies+i)],Projected[*(mod->Indicies+i+1)],Projected[*(mod->Indicies+i+2)],r);
 }
-//drawing the lines as overlay
-class Col y(155,155,155);
+}
+if(render_wireframe)
+{
+  //drawing the lines as overlay
+class Col y(255,255,255);
 for(int i=0;i<mod->Num_Indicies*3;i+=3)
 {
 class Col r(*(mod->cols+i),*(mod->cols+i+1),*(mod->cols+i+2));
-draw_line(Projected[*(mod->Indicies+i)],Projected[*(mod->Indicies+i+1)],r);
-draw_line(Projected[*(mod->Indicies+i+1)],Projected[*(mod->Indicies+i+2)],r);
-draw_line(Projected[*(mod->Indicies+i)],Projected[*(mod->Indicies+i+2)],r);
+draw_line(Projected[*(mod->Indicies+i)],Projected[*(mod->Indicies+i+1)],y);
+draw_line(Projected[*(mod->Indicies+i+1)],Projected[*(mod->Indicies+i+2)],y);
+draw_line(Projected[*(mod->Indicies+i)],Projected[*(mod->Indicies+i+2)],y);
 //std::cout<<Projected[*(mod->Indicies+i)].x<<" "<<Projected[*(mod->Indicies+i+1)].x<<" "<<Projected[*(mod->Indicies+i+2)].x<<std::endl;
 }
+}
+
 }
 
 
@@ -134,6 +140,7 @@ void draw_filled_tris(class Vec3 P0,class Vec3 P1,class Vec3 P2,class Col col)
             double b=P0.x-(a*P0.y);
             X_left.x=b+a*i;
             X_left.y=i;
+            X_left.z=calc_intermedizte_z(i,P0,P1);
         }
         else if(i>=P1.y && i<=P2.y)//p1-p2
         {
@@ -142,6 +149,7 @@ void draw_filled_tris(class Vec3 P0,class Vec3 P1,class Vec3 P2,class Col col)
             double b=P1.x-(a*P1.y);
             X_left.x=b+a*i;
             X_left.y=i;
+            X_left.z=calc_intermedizte_z(i,P1,P2);
         }
 //calculate x for p0-p2
         if(i>=P0.y && i<=P2.y)
@@ -150,6 +158,7 @@ void draw_filled_tris(class Vec3 P0,class Vec3 P1,class Vec3 P2,class Col col)
         double b=P0.x-(a*P0.y);
         X_right.x=b+a*i;
         X_right.y=i;
+        X_right.z=calc_intermedizte_z(i,P0,P2);
         }
 
 //draw the horizontal lines
@@ -191,7 +200,13 @@ void draw_line(class Vec3 P,class Vec3 P1,class Col col)
                 screen_cord=normalized_to_screen_cord(i,(int)yn);
                 yn+=m;
                 h+=0.01;
-                putpixel(screen_cord.x,screen_cord.y,COLOR(col.r,col.g,col.b));
+                double zz=calc_intermedizte_z(i,P,P1);
+                if(z_buff[(int)screen_cord.y][(int)screen_cord.x]>=zz)
+                {
+                    z_buff[(int)screen_cord.y][(int)screen_cord.x]=zz;
+                    putpixel(screen_cord.x,screen_cord.y,COLOR(col.r,col.g,col.b));
+                }
+
             }
         }
     }
@@ -210,13 +225,37 @@ void draw_line(class Vec3 P,class Vec3 P1,class Col col)
                 Vec3 screen_cord;
                 screen_cord=normalized_to_screen_cord((int)xn,i);//converting from normal graph cordinate to screen co_ordinate system
                 xn+=m;
-                putpixel(screen_cord.x,screen_cord.y,COLOR(col.r,col.g,col.b));
+                double zz=calc_intermedizte_z(i,P,P1);
+
+                if(z_buff[(int)screen_cord.y][(int)screen_cord.x]>=zz)
+                {
+                    z_buff[(int)screen_cord.y][(int)screen_cord.x]=zz;
+                    putpixel(screen_cord.x,screen_cord.y,COLOR(col.r,col.g,col.b));
+                }
             }
         }
     }
 }
 
-
+double calc_intermedizte_z(int i,class Vec3 P0,class Vec3 P1)
+{
+double DX=abs(P1.x-P0.x);
+double DY=abs(P1.y-P0.y);
+if(DX>DY)
+{
+double a=(P1.z-P0.z)/(P1.x-P0.x);
+double b=P0.z-(a*P0.x);
+double z=b+a*i;
+return z;
+}
+else
+{
+double a=(P1.z-P0.z)/(P1.y-P0.y);
+double b=P0.z-(a*P0.y);
+double z=b+a*i;
+return z;
+}
+}
 class Vec3 normalized_to_screen_cord(int X,int Y)
 {
     double retx=((double)Win_Width/2.0)+(double)X;
