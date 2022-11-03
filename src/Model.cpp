@@ -16,7 +16,7 @@ MESH::load_obj_data(filepath,Verticies,&Num_Verticies,Indicies,&Num_Indicies,col
 
 Model::Model()//ann icosphere
 {
-    class Vec3 gp(0,0,1);
+    class Vec3 gp(0,0,0);
     this->Global_Pos=gp;
     //ctor
     this->Num_Indicies=12;//num of faces

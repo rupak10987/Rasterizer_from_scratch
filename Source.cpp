@@ -17,8 +17,8 @@ void draw_line(class Vec3 P,class Vec3 P1,class Col col);
 class Vec3 Project_Vertex(class Vertex A);
 class Vec3 View_to_canvas(class Vec3 A);//scales up for the canvas
 class Vec3 normalized_to_screen_cord(int X,int Y);
-int Win_Width=500;
-int Win_Height=500;
+int Win_Width=700;
+int Win_Height=700;
 int View_H=2;
 int View_W=2;
 double View_d=2;
@@ -36,9 +36,9 @@ z_buff[i][j]=1000;
     int win=initwindow(Win_Width,Win_Height,(const char*)"RASTERIZER");
     setcurrentwindow(win);
     class Model* mod=new Model("3D_Models/frog.txt");
-    class Model* mod1=new Model();
+    //class Model* mod1=new Model();
     render_object(mod,true,true);
-    //render_object(mod);
+    //render_object(mod1,true,true);
     getch();
     closegraph();
     return 0;
@@ -52,7 +52,7 @@ class Vec3 Projected[(mod->Num_Verticies)];
 //std::cout<<mod->Num_Verticies<<std::endl;
 for(int i=0;i<mod->Num_Verticies*3;i+=3)
 {
-Projected[i/3].x=(*(mod->Verticies+i))+mod->Global_Pos.x+1;
+Projected[i/3].x=(*(mod->Verticies+i))+mod->Global_Pos.x;
 Projected[i/3].y=(*(mod->Verticies+1+i))+mod->Global_Pos.y;
 Projected[i/3].z=(*(mod->Verticies+2+i))+mod->Global_Pos.z;
 
@@ -81,9 +81,9 @@ class Col y(255,255,255);
 for(int i=0;i<mod->Num_Indicies*3;i+=3)
 {
 class Col r(*(mod->cols+i),*(mod->cols+i+1),*(mod->cols+i+2));
-draw_line(Projected[*(mod->Indicies+i)],Projected[*(mod->Indicies+i+1)],y);
-draw_line(Projected[*(mod->Indicies+i+1)],Projected[*(mod->Indicies+i+2)],y);
-draw_line(Projected[*(mod->Indicies+i)],Projected[*(mod->Indicies+i+2)],y);
+draw_line(Projected[*(mod->Indicies+i)],Projected[*(mod->Indicies+i+1)],r);
+draw_line(Projected[*(mod->Indicies+i+1)],Projected[*(mod->Indicies+i+2)],r);
+draw_line(Projected[*(mod->Indicies+i)],Projected[*(mod->Indicies+i+2)],r);
 //std::cout<<Projected[*(mod->Indicies+i)].x<<" "<<Projected[*(mod->Indicies+i+1)].x<<" "<<Projected[*(mod->Indicies+i+2)].x<<std::endl;
 }
 }
@@ -136,7 +136,7 @@ void draw_filled_tris(class Vec3 P0,class Vec3 P1,class Vec3 P2,class Col col)
         if(i>=P0.y && i<=P1.y)//p0-p1
         {
 //calculate x for  p0-p1
-            double a=(P1.x-P0.x)/(P1.y-P0.y);
+            double a=(double)(P1.x-P0.x)/(double)(P1.y-P0.y);
             double b=P0.x-(a*P0.y);
             X_left.x=b+a*i;
             X_left.y=i;
@@ -145,7 +145,7 @@ void draw_filled_tris(class Vec3 P0,class Vec3 P1,class Vec3 P2,class Col col)
         else if(i>=P1.y && i<=P2.y)//p1-p2
         {
 //calculate x for p1-p2
-            double a=(P2.x-P1.x)/(P2.y-P1.y);
+            double a=(double)(P2.x-P1.x)/(double)(P2.y-P1.y);
             double b=P1.x-(a*P1.y);
             X_left.x=b+a*i;
             X_left.y=i;
@@ -154,7 +154,7 @@ void draw_filled_tris(class Vec3 P0,class Vec3 P1,class Vec3 P2,class Col col)
 //calculate x for p0-p2
         if(i>=P0.y && i<=P2.y)
         {
-        double a=(P2.x-P0.x)/(P2.y-P0.y);
+        double a=(double)(P2.x-P0.x)/(double)(P2.y-P0.y);
         double b=P0.x-(a*P0.y);
         X_right.x=b+a*i;
         X_right.y=i;
@@ -191,7 +191,7 @@ void draw_line(class Vec3 P,class Vec3 P1,class Col col)
         }
         else
         {
-            double m=(P1.y-P.y)/(P1.x-P.x);// calculating slope
+            double m=(double)(P1.y-P.y)/(double)(P1.x-P.x);// calculating slope
             double yn=P.y;
             double h=0.51;
             for(int i=P.x; i<P1.x; i++)
@@ -201,7 +201,8 @@ void draw_line(class Vec3 P,class Vec3 P1,class Col col)
                 yn+=m;
                 h+=0.01;
                 double zz=calc_intermedizte_z(i,P,P1);
-                if(z_buff[(int)screen_cord.y][(int)screen_cord.x]>=zz)
+                if(screen_cord.x<=Win_Width && screen_cord.x>=0 && screen_cord.y>=0 && screen_cord.y<=Win_Height)
+                if(z_buff[(int)screen_cord.y][(int)screen_cord.x]>zz)
                 {
                     z_buff[(int)screen_cord.y][(int)screen_cord.x]=zz;
                     putpixel(screen_cord.x,screen_cord.y,COLOR(col.r,col.g,col.b));
@@ -218,7 +219,7 @@ void draw_line(class Vec3 P,class Vec3 P1,class Col col)
         }
         else
         {
-            double m=(P1.x-P.x)/(P1.y-P.y);//calculating slope
+            double m=(double)(P1.x-P.x)/(double)(P1.y-P.y);//calculating slope
             double xn=P.x;
             for(int i=P.y; i<P1.y; i++)
             {
@@ -226,8 +227,8 @@ void draw_line(class Vec3 P,class Vec3 P1,class Col col)
                 screen_cord=normalized_to_screen_cord((int)xn,i);//converting from normal graph cordinate to screen co_ordinate system
                 xn+=m;
                 double zz=calc_intermedizte_z(i,P,P1);
-
-                if(z_buff[(int)screen_cord.y][(int)screen_cord.x]>=zz)
+                if(screen_cord.x<=Win_Width && screen_cord.x>=0 && screen_cord.y>=0 && screen_cord.y<=Win_Height)
+                if(z_buff[(int)screen_cord.y][(int)screen_cord.x]>zz )
                 {
                     z_buff[(int)screen_cord.y][(int)screen_cord.x]=zz;
                     putpixel(screen_cord.x,screen_cord.y,COLOR(col.r,col.g,col.b));
@@ -243,14 +244,14 @@ double DX=abs(P1.x-P0.x);
 double DY=abs(P1.y-P0.y);
 if(DX>DY)
 {
-double a=(P1.z-P0.z)/(P1.x-P0.x);
+double a=(double)(P1.z-P0.z)/(double)(P1.x-P0.x);
 double b=P0.z-(a*P0.x);
 double z=b+a*i;
 return z;
 }
 else
 {
-double a=(P1.z-P0.z)/(P1.y-P0.y);
+double a=(double)(P1.z-P0.z)/(double)(P1.y-P0.y);
 double b=P0.z-(a*P0.y);
 double z=b+a*i;
 return z;
