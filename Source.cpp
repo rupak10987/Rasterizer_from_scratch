@@ -7,8 +7,9 @@
 #include"Vertex.h"
 #include"Model.h"
 #include"Matrix.h"
-double z_buff[1080][1080]={1000};
+double **z_buff;
 double Vals[500]= {0};
+double set_z_buff(int i,int y,class Vec3 P0,class Vec3 P1);
 void render_object(class Model* mod);
 void draw_filled_tris(class Vec3 P0,class Vec3 P1,class Vec3 P2,class Col col);
 void ineterpolate(double x0,double y0,double x1,double y1);
@@ -24,6 +25,12 @@ double View_d=2;
 int main()
 {
 
+z_buff=new double*[Win_Height+1];
+for(int i=0;i<=Win_Height;i++)
+z_buff[i]=new double[Win_Width+1];
+for(int i=0;i<=Win_Height;i++)
+for(int j=0;j<=Win_Width;j++)
+z_buff[i][j]=100;
 
     //Matrix::Matrix_Multiplication(4,4,4,1);
     int win=initwindow(Win_Width,Win_Height,(const char*)"RASTERIZER");
@@ -45,7 +52,7 @@ class Vec3 Projected[(mod->Num_Verticies)];
 //std::cout<<mod->Num_Verticies<<std::endl;
 for(int i=0;i<mod->Num_Verticies*3;i+=3)
 {
-Projected[i/3].x=(*(mod->Verticies+i))+mod->Global_Pos.x;
+Projected[i/3].x=(*(mod->Verticies+i))+mod->Global_Pos.x+1;
 Projected[i/3].y=(*(mod->Verticies+1+i))+mod->Global_Pos.y;
 Projected[i/3].z=(*(mod->Verticies+2+i))+mod->Global_Pos.z;
 
