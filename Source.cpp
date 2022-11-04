@@ -32,16 +32,25 @@ for(int i=0;i<=Win_Height;i++)
 for(int j=0;j<=Win_Width;j++)
 z_buff[i][j]=1000;
 
-    //Matrix::Matrix_Multiplication(4,4,4,1);
-    int win=initwindow(Win_Width,Win_Height,(const char*)"RASTERIZER");
-    setcurrentwindow(win);
-    class Model* mod=new Model("3D_Models/frog_c.txt");
-    //class Model* mod1=new Model();
-    render_object(mod,true,true);
-    //render_object(mod1,true,true);
-    getch();
-    closegraph();
-    return 0;
+int win=initwindow(Win_Width,Win_Height,(const char*)"RASTERIZER");
+setcurrentwindow(win);
+class Model* mod=new Model("3D_Models/frog.txt");
+render_object(mod,true,true);
+
+//
+//drawing two axis for ref
+class Vec3 ver1(0,-Win_Height,0);
+class Vec3 ver2(0,Win_Height,0);
+class Vec3 hor1(-Win_Width,0,0);
+class Vec3 hor2(Win_Width,0,0);
+class Col axis_col(255,255,255);
+draw_line(ver1,ver2,axis_col);
+draw_line(hor1,hor2,axis_col);
+//
+
+getch();
+closegraph();
+return 0;
 }
 
 
@@ -56,21 +65,21 @@ Projected[i/3].x=(*(mod->Verticies+i))+mod->Global_Pos.x;
 Projected[i/3].y=(*(mod->Verticies+1+i))+mod->Global_Pos.y;
 Projected[i/3].z=(*(mod->Verticies+2+i))+mod->Global_Pos.z;
 
-mod->Rotation.y=45;
+mod->Rotation.y=(3.1416*30)/180.0;
 mod->Rotation.x=0;
 mod->Rotation.z=0;
 mod->Scale.x=2;
 mod->Scale.y=2;
 mod->Scale.z=2;
 class Vec3 translate(0,0,20);
-std::cout<<"normal= "<<Projected[i/3].x<<", "<<Projected[i/3].y<<", "<<Projected[i/3].z<<std::endl;
+//std::cout<<"normal= "<<Projected[i/3].x<<", "<<Projected[i/3].y<<", "<<Projected[i/3].z<<std::endl;
 
 class Vec3 temp0(0,0,0);
 temp0=Matrix::Transform(Projected[i/3],mod->Scale,mod->Rotation,translate);
 Projected[i/3].x=temp0.x;
 Projected[i/3].y=temp0.y;
 Projected[i/3].z=temp0.z+20;
-std::cout<<"matrix= "<<Projected[i/3].x<<", "<<Projected[i/3].y<<", "<<Projected[i/3].z<<std::endl;
+//std::cout<<"matrix= "<<Projected[i/3].x<<", "<<Projected[i/3].y<<", "<<Projected[i/3].z<<std::endl;
 
 class Vertex v(Projected[i/3].x,Projected[i/3].y,Projected[i/3].z,'g');
 class Vec3 temp;
