@@ -34,8 +34,8 @@ z_buff[i][j]=1000;
 
 int win=initwindow(Win_Width,Win_Height,(const char*)"RASTERIZER");
 setcurrentwindow(win);
-class Model* mod=new Model("3D_Models/frog.txt");
-render_object(mod,true,true);
+class Model* mod=new Model("3D_Models/birdy.txt");
+render_object(mod,true,false);
 
 //
 //drawing two axis for ref
@@ -65,8 +65,8 @@ Projected[i/3].x=(*(mod->Verticies+i))+mod->Global_Pos.x;
 Projected[i/3].y=(*(mod->Verticies+1+i))+mod->Global_Pos.y;
 Projected[i/3].z=(*(mod->Verticies+2+i))+mod->Global_Pos.z;
 
-mod->Rotation.y=(3.1416*30)/180.0;
-mod->Rotation.x=0;
+mod->Rotation.y=(3.1416*60)/180.0;
+mod->Rotation.x=(3.1416*10)/180.0;
 mod->Rotation.z=0;
 mod->Scale.x=2;
 mod->Scale.y=2;
@@ -148,11 +148,11 @@ void draw_filled_tris(class Vec3 P0,class Vec3 P1,class Vec3 P2,class Col col)
     double b_side=P1.Length(P1.Direction_Vec(P2,P1));
     double c_side=P1.Length(P1.Direction_Vec(P2,P0));
     double length=a_side+b_side+c_side;
-    if(length<=a_side+b_side || length<=b_side+c_side || length<=a_side+c_side)
+    if(length<a_side+b_side || length<b_side+c_side || length<a_side+c_side)
     return;
 
 //calculate the x's for a y
-    for(int i=(int)P0.y; i<(int)P2.y; i++)
+    for(int i=(int)P0.y+1; i<(int)P2.y; i++)
     {
 //check if i is in between p0-p1 or p1-p2
         if(i>=P0.y && i<=P1.y)//p0-p1
@@ -164,7 +164,7 @@ void draw_filled_tris(class Vec3 P0,class Vec3 P1,class Vec3 P2,class Col col)
             X_left.y=i;
             X_left.z=calc_intermedizte_z(i,P0,P1);
         }
-        else if(i>=P1.y && i<=P2.y)//p1-p2
+        else if(i>P1.y && i<P2.y)//p1-p2
         {
 //calculate x for p1-p2
             double a=(double)(P2.x-P1.x)/(double)(P2.y-P1.y);
@@ -174,7 +174,7 @@ void draw_filled_tris(class Vec3 P0,class Vec3 P1,class Vec3 P2,class Col col)
             X_left.z=calc_intermedizte_z(i,P1,P2);
         }
 //calculate x for p0-p2
-        if(i>=P0.y && i<=P2.y)
+        if(i>P0.y && i<P2.y)
         {
         double a=(double)(P2.x-P0.x)/(double)(P2.y-P0.y);
         double b=P0.x-(a*P0.y);
@@ -191,8 +191,8 @@ void draw_filled_tris(class Vec3 P0,class Vec3 P1,class Vec3 P2,class Col col)
             X_left=X_right;
             X_right=temp;
         }
-        if((X_left.x==0 && X_left.y==0)||(X_right.x==0 && X_right.y==0))//donno what the problem was.. terminated for the condition
-            continue;
+       // if((X_left.x==0 && X_left.y==0)||(X_right.x==0 && X_right.y==0))//donno what the problem was.. terminated for the condition
+            //continue;
         draw_line(X_left,X_right,col);
 
     }
@@ -216,7 +216,7 @@ void draw_line(class Vec3 P,class Vec3 P1,class Col col)
             double m=(double)(P1.y-P.y)/(double)(P1.x-P.x);// calculating slope
             double yn=P.y;
             double h=0.51;
-            for(int i=P.x; i<P1.x; i++)
+            for(int i=P.x; i<=P1.x; i++)
             {
                 Vec3 screen_cord;
                 screen_cord=normalized_to_screen_cord(i,(int)yn);
@@ -227,7 +227,7 @@ void draw_line(class Vec3 P,class Vec3 P1,class Col col)
                 if(z_buff[(int)screen_cord.y][(int)screen_cord.x]>zz)
                 {
                     z_buff[(int)screen_cord.y][(int)screen_cord.x]=zz;
-                    putpixel(screen_cord.x,screen_cord.y,COLOR(col.r,col.g,col.b));
+                    putpixel((int)screen_cord.x,(int)screen_cord.y,COLOR(col.r,col.g,col.b));
                 }
 
             }
@@ -243,7 +243,7 @@ void draw_line(class Vec3 P,class Vec3 P1,class Col col)
         {
             double m=(double)(P1.x-P.x)/(double)(P1.y-P.y);//calculating slope
             double xn=P.x;
-            for(int i=P.y; i<P1.y; i++)
+            for(int i=P.y; i<=P1.y; i++)
             {
                 Vec3 screen_cord;
                 screen_cord=normalized_to_screen_cord((int)xn,i);//converting from normal graph cordinate to screen co_ordinate system
@@ -253,7 +253,7 @@ void draw_line(class Vec3 P,class Vec3 P1,class Col col)
                 if(z_buff[(int)screen_cord.y][(int)screen_cord.x]>zz )
                 {
                     z_buff[(int)screen_cord.y][(int)screen_cord.x]=zz;
-                    putpixel(screen_cord.x,screen_cord.y,COLOR(col.r,col.g,col.b));
+                    putpixel((int)screen_cord.x,(int)screen_cord.y,COLOR(col.r,col.g,col.b));
                 }
             }
         }
