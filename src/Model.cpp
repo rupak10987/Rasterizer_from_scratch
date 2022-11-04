@@ -4,8 +4,8 @@
 Model::Model(char* filepath)
 {
     //ctor
-    class Vec3 gp(0,0,15);
-    this->Global_Pos=gp;
+class Vec3 gp(0,0,0);
+this->Global_Pos=gp;
 MESH::load_Array_sizes(filepath,&Num_Verticies,&Num_Indicies);
 this->Verticies=new double[Num_Verticies*3];
 this->Indicies=new int[Num_Indicies*3];
