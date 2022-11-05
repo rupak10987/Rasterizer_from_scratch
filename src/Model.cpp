@@ -10,7 +10,8 @@ MESH::load_Array_sizes(filepath,&Num_Verticies,&Num_Indicies);
 this->Verticies=new double[Num_Verticies*3];
 this->Indicies=new int[Num_Indicies*3];
 this->cols=new double[Num_Indicies*3];
-MESH::load_obj_data(filepath,Verticies,&Num_Verticies,Indicies,&Num_Indicies,cols);
+this->Face_Normals=new double[Num_Indicies*3];
+MESH::load_obj_data(filepath,Verticies,&Num_Verticies,Indicies,&Num_Indicies,cols,Face_Normals);
 }
 
 

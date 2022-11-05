@@ -11,6 +11,7 @@ class Model
         double* Verticies;
         int* Indicies;
         double* cols;
+        double *Face_Normals;
         virtual ~Model();
         class Vec3 Global_Pos;
         class Vec3 Rotation;

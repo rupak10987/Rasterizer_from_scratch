@@ -9,7 +9,9 @@
 #include"Matrix.h"
 double **z_buff;
 double Vals[500]= {0};
+double calculate_light(class Vec3 N,class Vec3 P,class Vec3 V,double s);
 double calc_intermedizte_z(int i,class Vec3 P,class Vec3 P1);
+double calc_intermedizte_1_by_z(int i,class Vec3 P0,class Vec3 P1);
 void render_object(class Model* mod,bool render_faces,bool render_wireframe);
 void draw_filled_tris(class Vec3 P0,class Vec3 P1,class Vec3 P2,class Col col);
 void ineterpolate(double x0,double y0,double x1,double y1);
@@ -17,11 +19,13 @@ void draw_line(class Vec3 P,class Vec3 P1,class Col col);
 class Vec3 Project_Vertex(class Vertex A);
 class Vec3 View_to_canvas(class Vec3 A);//scales up for the canvas
 class Vec3 normalized_to_screen_cord(int X,int Y);
+class Vec3 Calculate_Mid_of_triangle(class Vec3 P0,class Vec3 P1,class Vec3 P2);
 int Win_Width=700;
 int Win_Height=700;
 int View_H=2;
 int View_W=2;
 double View_d=2;
+class Light_Source* Lights[3];
 int main()
 {
 
@@ -30,11 +34,23 @@ for(int i=0;i<=Win_Height;i++)
 z_buff[i]=new double[Win_Width+1];
 for(int i=0;i<=Win_Height;i++)
 for(int j=0;j<=Win_Width;j++)
-z_buff[i][j]=1000;
+z_buff[i][j]=9999;
+
+//lights
+class Vec3 l(0, 0, -10);
+class Light_Source* point_l=new Light_Source(1,point,l);
+l.x=0;l.y=0;l.z=0;
+class Light_Source* ambient_l=new Light_Source(0.2,ambient,l);
+l.x=-10;l.y=0;l.z=1;
+class Light_Source* directional_l=new Light_Source(10,directional,l);
+
+Lights[0]=point_l;
+Lights[1]=ambient_l;
+Lights[2]=directional_l;
 
 int win=initwindow(Win_Width,Win_Height,(const char*)"RASTERIZER");
 setcurrentwindow(win);
-class Model* mod=new Model("3D_Models/birdy.txt");
+class Model* mod=new Model("3D_Models/default_cube.txt");
 render_object(mod,true,false);
 
 //
@@ -48,6 +64,10 @@ draw_line(ver1,ver2,axis_col);
 draw_line(hor1,hor2,axis_col);
 //
 
+//test
+//end of test
+
+
 getch();
 closegraph();
 return 0;
@@ -57,35 +77,30 @@ return 0;
 
 void render_object(class Model* mod,bool render_faces,bool render_wireframe)
 {
+double light_intensity=0;
+class Vec3 Not_Projected[(mod->Num_Verticies)];
 class Vec3 Projected[(mod->Num_Verticies)];
-//std::cout<<mod->Num_Verticies<<std::endl;
 for(int i=0;i<mod->Num_Verticies*3;i+=3)
 {
 Projected[i/3].x=(*(mod->Verticies+i))+mod->Global_Pos.x;
 Projected[i/3].y=(*(mod->Verticies+1+i))+mod->Global_Pos.y;
 Projected[i/3].z=(*(mod->Verticies+2+i))+mod->Global_Pos.z;
 
-mod->Rotation.y=(3.1416*60)/180.0;
-mod->Rotation.x=(3.1416*10)/180.0;
+Not_Projected[i/3].x=(*(mod->Verticies+i))+mod->Global_Pos.x;
+Not_Projected[i/3].y=(*(mod->Verticies+1+i))+mod->Global_Pos.y;
+Not_Projected[i/3].z=(*(mod->Verticies+2+i))+mod->Global_Pos.z;
+
+mod->Rotation.y=(3.1416*-30)/180.0;
+mod->Rotation.x=(3.1416*-20)/180.0;
 mod->Rotation.z=0;
 mod->Scale.x=2;
 mod->Scale.y=2;
 mod->Scale.z=2;
-class Vec3 translate(0,0,20);
-//std::cout<<"normal= "<<Projected[i/3].x<<", "<<Projected[i/3].y<<", "<<Projected[i/3].z<<std::endl;
-
-class Vec3 temp0(0,0,0);
-temp0=Matrix::Transform(Projected[i/3],mod->Scale,mod->Rotation,translate);
-Projected[i/3].x=temp0.x;
-Projected[i/3].y=temp0.y;
-Projected[i/3].z=temp0.z+20;
-//std::cout<<"matrix= "<<Projected[i/3].x<<", "<<Projected[i/3].y<<", "<<Projected[i/3].z<<std::endl;
+class Vec3 translate(0,0,30);
+Projected[i/3]=Matrix::Transform(Projected[i/3],mod->Scale,mod->Rotation,translate);
 
 class Vertex v(Projected[i/3].x,Projected[i/3].y,Projected[i/3].z,'g');
-class Vec3 temp;
-temp=Project_Vertex(v);
-Projected[i/3]=temp;
-//std::cout<<"x="<<Projected[i/3].x<<" y="<<Projected[i/3].y<<" z="<<Projected[i/3].z<<std::endl<<std::endl;
+Projected[i/3]=Project_Vertex(v);
 }
 //drawing the faces
 if(render_faces)
@@ -93,6 +108,20 @@ if(render_faces)
  for(int i=0;i<mod->Num_Indicies*3;i+=3)
 {
 class Col r(*(mod->cols+i),*(mod->cols+i+1),*(mod->cols+i+2));
+
+//light calculations
+class Vec3 Normal(*(mod->Face_Normals+i),*(mod->Face_Normals+i+1),*(mod->Face_Normals+i+2));
+class Vec3 Origin(0,0,0);
+class Vec3 view_vec;
+class Vec3 Mid_of_tri;
+Mid_of_tri=Calculate_Mid_of_triangle(Not_Projected[*(mod->Indicies+i)],Not_Projected[*(mod->Indicies+i+1)],Not_Projected[*(mod->Indicies+i+2)]);
+view_vec=view_vec.Direction_Vec(Origin,Mid_of_tri);
+light_intensity=calculate_light(Normal,Mid_of_tri,view_vec,1);
+r.Set_Intensity(light_intensity);
+
+
+//back face cull
+if(Normal.signed_angle_between(view_vec,Normal)>90)
 draw_filled_tris(Projected[*(mod->Indicies+i)],Projected[*(mod->Indicies+i+1)],Projected[*(mod->Indicies+i+2)],r);
 }
 }
@@ -106,7 +135,6 @@ class Col r(*(mod->cols+i),*(mod->cols+i+1),*(mod->cols+i+2));
 draw_line(Projected[*(mod->Indicies+i)],Projected[*(mod->Indicies+i+1)],r);
 draw_line(Projected[*(mod->Indicies+i+1)],Projected[*(mod->Indicies+i+2)],r);
 draw_line(Projected[*(mod->Indicies+i)],Projected[*(mod->Indicies+i+2)],r);
-//std::cout<<Projected[*(mod->Indicies+i)].x<<" "<<Projected[*(mod->Indicies+i+1)].x<<" "<<Projected[*(mod->Indicies+i+2)].x<<std::endl;
 }
 }
 
@@ -191,8 +219,6 @@ void draw_filled_tris(class Vec3 P0,class Vec3 P1,class Vec3 P2,class Col col)
             X_left=X_right;
             X_right=temp;
         }
-       // if((X_left.x==0 && X_left.y==0)||(X_right.x==0 && X_right.y==0))//donno what the problem was.. terminated for the condition
-            //continue;
         draw_line(X_left,X_right,col);
 
     }
@@ -222,7 +248,7 @@ void draw_line(class Vec3 P,class Vec3 P1,class Col col)
                 screen_cord=normalized_to_screen_cord(i,(int)yn);
                 yn+=m;
                 h+=0.01;
-                double zz=calc_intermedizte_z(i,P,P1);
+                double zz=calc_intermedizte_z(i,P,P1);//calc_intermedizte_z(i,P,P1);
                 if(screen_cord.x<=Win_Width && screen_cord.x>=0 && screen_cord.y>=0 && screen_cord.y<=Win_Height)
                 if(z_buff[(int)screen_cord.y][(int)screen_cord.x]>zz)
                 {
@@ -248,7 +274,7 @@ void draw_line(class Vec3 P,class Vec3 P1,class Col col)
                 Vec3 screen_cord;
                 screen_cord=normalized_to_screen_cord((int)xn,i);//converting from normal graph cordinate to screen co_ordinate system
                 xn+=m;
-                double zz=calc_intermedizte_z(i,P,P1);
+                double zz=calc_intermedizte_z(i,P,P1);//calc_intermedizte_z(i,P,P1);
                 if(screen_cord.x<=Win_Width && screen_cord.x>=0 && screen_cord.y>=0 && screen_cord.y<=Win_Height)
                 if(z_buff[(int)screen_cord.y][(int)screen_cord.x]>zz )
                 {
@@ -262,6 +288,7 @@ void draw_line(class Vec3 P,class Vec3 P1,class Col col)
 
 double calc_intermedizte_z(int i,class Vec3 P0,class Vec3 P1)
 {
+
 double DX=abs(P1.x-P0.x);
 double DY=abs(P1.y-P0.y);
 if(DX>DY)
@@ -279,10 +306,88 @@ double z=b+a*i;
 return z;
 }
 }
+
+
+double calc_intermedizte_1_by_z(int i,class Vec3 P0,class Vec3 P1)
+{
+
+double DX=abs(P1.x-P0.x);
+double DY=abs(P1.y-P0.y);
+
+P0.z=(double)1.0/P0.z;
+P1.z=(double)1.0/P1.z;
+
+
+if(DX>DY)
+{
+double z=P0.z+(i+P0.x)*(double(P1.z-P0.z)/double(P1.x-P0.x));
+return z;
+}
+else
+{
+double z=P0.z+(i+P0.y)*(double(P1.z-P0.z)/double(P1.y-P0.y));
+return z;
+}
+}
+
+
+
 class Vec3 normalized_to_screen_cord(int X,int Y)
 {
     double retx=((double)Win_Width/2.0)+(double)X;
     double rety=((double)Win_Height/2.0)-(double)Y;
     class Vec3 v(retx,rety,0);
     return v;
+};
+double calculate_light(class Vec3 N,class Vec3 P,class Vec3 V,double s)
+{
+double intense=0;
+for(int i=0;i<3;i++)//point+ambient+directional
+{
+if(Lights[i]->type==ambient)
+{
+    intense+=Lights[i]->intensity;
+}
+else
+{
+
+    class Vec3 L;
+    if(Lights[i]->type==point)
+    {
+    L=L.Direction_Vec(Lights[i]->pos,P);
+
+    }
+    else
+    {
+    L=Lights[i]->pos;//pos is the direction here
+
+    }
+    double n_dot_l=L.DOT_PRODUCT(N,L);
+    if(n_dot_l>0)
+    {
+        intense+=(Lights[i]->intensity * n_dot_l)/(sqrt(N.DOT_PRODUCT(N,N))*sqrt(L.DOT_PRODUCT(L,L)));
+    //specular calculatins
+    if(s!=-1)
+    {
+        class Vec3 R;
+        R=R.Direction_Vec(R.Scaler_Mul_Vec(2*R.DOT_PRODUCT(N,L),N),L);
+        double r_dot_v=R.DOT_PRODUCT(R,V);
+        intense+=Lights[i]->intensity*pow(r_dot_v/(sqrt(R.DOT_PRODUCT(R,R))*sqrt(R.DOT_PRODUCT(V,V))),s);
+    }
+    }
+}
+
+}
+return intense;
+}
+
+class Vec3 Calculate_Mid_of_triangle(class Vec3 P0,class Vec3 P1,class Vec3 P2)
+{
+
+   double x=0.333*(P0.x+P1.x+P2.x);
+   double y=0.333*(P0.y+P1.y+P2.y);
+   double z=0.333*(P0.z+P1.z+P2.z);
+   class Vec3 M(x,y,z);
+   return M;
+
 };

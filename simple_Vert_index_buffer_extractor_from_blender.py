@@ -1,6 +1,6 @@
 import bpy
 
-obj = bpy.data.objects['low_poly']
+obj = bpy.data.objects['Cube']
 mesh = obj.data
 
 normals = []
@@ -31,10 +31,10 @@ for face in mesh.polygons:
         mats.append((int)(col3[0]*255))
         mats.append((int)(col3[1]*255))
         mats.append((int)(col3[2]*255))
-    
-    for i in range(len(face.vertices)):
-        v = mesh.vertices[face.vertices[i]]
-        normals.append([v.normal[0],v.normal[1],v.normal[2]])
+        
+    normals.append(face.normal.x)
+    normals.append(face.normal.y)
+    normals.append(-face.normal.z)
 
 verts = []
 for vert in mesh.vertices:
@@ -66,8 +66,14 @@ for i in range(len(mats)):
     out_cpp_str+=str(mats[i])+','
     if (i+1)%3==0:
         out_cpp_str+="\n"
+        
+out_cpp_str+="\nNormal buffer: \n"
+for i in range(len(normals)):
+    out_cpp_str+=str(format(normals[i],".2f"))+','
+    if (i+1)%3==0:
+        out_cpp_str+="\n"
             
-cpp_filepath = bpy.path.abspath("//")+"frog"+".txt"
+cpp_filepath = bpy.path.abspath("//")+"Default_Cube"+".txt"
 
 
 

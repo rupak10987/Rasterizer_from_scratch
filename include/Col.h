@@ -12,6 +12,7 @@ class Col
         int g;
         int b;
         class Col Mix(class Col A,class Col B,double amount);
+        void Set_Intensity(double i);
     protected:
 
     private:

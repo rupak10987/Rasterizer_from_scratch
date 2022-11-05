@@ -3,12 +3,13 @@
 #include<math.h>
 namespace MESH
 {
-void load_obj_data(char* filePath,double* vertex,int *num_vertex,int* index,int *num_index,double* color)
+void load_obj_data(char* filePath,double* vertex,int *num_vertex,int* index,int *num_index,double* color,double* normal)
 {
     int elements_counted=0;
     int local_vertex_count=*num_vertex*3;
     int local_index_count=*num_index*3;
     int local_col_count=*num_index*3;
+    int local_normal_count=*num_index*3;
     std::ifstream in(filePath);
     char c;
     if(in.is_open())
@@ -95,6 +96,11 @@ void load_obj_data(char* filePath,double* vertex,int *num_vertex,int* index,int 
                                 color[(*num_index)*3-local_col_count]=num;
                                 local_col_count--;
                             }
+                            else if(local_normal_count>0 && local_vertex_count<0 && local_index_count<=0 && local_col_count<=0)
+                            {
+                               normal[(*num_index)*3-local_normal_count]=num;
+                               local_normal_count--;
+                            }
                         }
 //reinitialize quee and stack
                         stack_top=0;
@@ -164,6 +170,11 @@ void load_obj_data(char* filePath,double* vertex,int *num_vertex,int* index,int 
                             {
                                 color[(*num_index)*3-local_col_count]=num;
                                 local_col_count--;
+                            }
+                             else if(local_normal_count>0 && local_vertex_count<0 && local_index_count<=0 && local_col_count<=0)
+                            {
+                               normal[(*num_index)*3-local_normal_count]=num;
+                               local_normal_count--;
                             }
                         }
 
