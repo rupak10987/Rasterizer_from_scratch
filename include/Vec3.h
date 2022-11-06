@@ -21,7 +21,7 @@ class Vec3
         class Vec3 CROSS_PRODUCT(class Vec3 A,class Vec3 B);
         double clac_xy_slope(class Vec3 A);
         double Length(class Vec3 A);
-        double signed_angle_between(class Vec3 From, class Vec3 To);
+        double unsigned_angle_between(class Vec3 From, class Vec3 To);
     protected:
 
     private:

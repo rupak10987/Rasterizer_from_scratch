@@ -1,6 +1,6 @@
 import bpy
 
-obj = bpy.data.objects['Cube']
+obj = bpy.data.objects['low_poly']
 mesh = obj.data
 
 normals = []
@@ -73,7 +73,7 @@ for i in range(len(normals)):
     if (i+1)%3==0:
         out_cpp_str+="\n"
             
-cpp_filepath = bpy.path.abspath("//")+"Default_Cube"+".txt"
+cpp_filepath = bpy.path.abspath("//")+"N_Frog"+".txt"
 
 
 

@@ -10,13 +10,13 @@
 1665046003 e:\projects\rasterizer_from_scratch\rasterizer_from_scratch\include\light_source.h
 	"Vec3.h"
 
-1667657779 e:\projects\rasterizer_from_scratch\rasterizer_from_scratch\include\vec3.h
+1667738310 e:\projects\rasterizer_from_scratch\rasterizer_from_scratch\include\vec3.h
 	<math.h>
 
-1667658586 source:e:\projects\rasterizer_from_scratch\rasterizer_from_scratch\src\vec3.cpp
+1667741285 source:e:\projects\rasterizer_from_scratch\rasterizer_from_scratch\src\vec3.cpp
 	"Vec3.h"
 
-1667667421 source:e:\projects\rasterizer_from_scratch\rasterizer_from_scratch\source.cpp
+1667756738 source:e:\projects\rasterizer_from_scratch\rasterizer_from_scratch\source.cpp
 	<graphics.h>
 	<iostream>
 	<math.h>

@@ -37,34 +37,41 @@ for(int j=0;j<=Win_Width;j++)
 z_buff[i][j]=9999;
 
 //lights
-class Vec3 l(0, 0, -10);
-class Light_Source* point_l=new Light_Source(1,point,l);
-l.x=0;l.y=0;l.z=0;
-class Light_Source* ambient_l=new Light_Source(0.2,ambient,l);
-l.x=-10;l.y=0;l.z=1;
-class Light_Source* directional_l=new Light_Source(10,directional,l);
+class Vec3 point_(-4,-4,-4);
+class Vec3 ambient_(-4,-4,-4);
+class Vec3 direc_(1,1,0.5);
+class Light_Source* point_l=new Light_Source(0,point,point_);
+class Light_Source* ambient_l=new Light_Source(0.7,ambient,ambient_);
+class Light_Source* directional_l=new Light_Source(0.25,directional,direc_);
 
 Lights[0]=point_l;
 Lights[1]=ambient_l;
 Lights[2]=directional_l;
 
+
 int win=initwindow(Win_Width,Win_Height,(const char*)"RASTERIZER");
 setcurrentwindow(win);
-class Model* mod=new Model("3D_Models/default_cube.txt");
-render_object(mod,true,false);
 
 //
 //drawing two axis for ref
-class Vec3 ver1(0,-Win_Height,0);
-class Vec3 ver2(0,Win_Height,0);
-class Vec3 hor1(-Win_Width,0,0);
-class Vec3 hor2(Win_Width,0,0);
-class Col axis_col(255,255,255);
-draw_line(ver1,ver2,axis_col);
-draw_line(hor1,hor2,axis_col);
+class Col axis_col_z(155,155,0);
+class Col axis_col_y(0,155,155);
+class Vec3 ver1(0,-Win_Height,30);
+class Vec3 ver2(0,Win_Height,30);
+class Vec3 hor1(-Win_Width,0,30);
+class Vec3 hor2(Win_Width,0,30);
+draw_line(ver1,ver2,axis_col_y);
+draw_line(hor1,hor2,axis_col_z);
 //
 
+class Model* mod=new Model("3D_Models/frog.txt");
+render_object(mod,true,false);
+
+
 //test
+class Vec3 A(0,0,-1);
+class Vec3 B(1,1,1);
+std::cout<<"test="<<A.unsigned_angle_between(A,B)<<std::endl;
 //end of test
 
 
@@ -91,7 +98,7 @@ Not_Projected[i/3].y=(*(mod->Verticies+1+i))+mod->Global_Pos.y;
 Not_Projected[i/3].z=(*(mod->Verticies+2+i))+mod->Global_Pos.z;
 
 mod->Rotation.y=(3.1416*-30)/180.0;
-mod->Rotation.x=(3.1416*-20)/180.0;
+mod->Rotation.x=(3.1416*0)/180.0;
 mod->Rotation.z=0;
 mod->Scale.x=2;
 mod->Scale.y=2;
@@ -111,17 +118,29 @@ class Col r(*(mod->cols+i),*(mod->cols+i+1),*(mod->cols+i+2));
 
 //light calculations
 class Vec3 Normal(*(mod->Face_Normals+i),*(mod->Face_Normals+i+1),*(mod->Face_Normals+i+2));
+
+mod->Rotation.y=(3.1416*-30)/180.0;
+mod->Rotation.x=(3.1416*0)/180.0;
+mod->Rotation.z=0;
+mod->Scale.x=2;
+mod->Scale.y=2;
+mod->Scale.z=2;
+class Vec3 translate(0,0,30);
+Normal=Matrix::Transform(Normal,mod->Scale,mod->Rotation,translate);
+
 class Vec3 Origin(0,0,0);
-class Vec3 view_vec;
 class Vec3 Mid_of_tri;
 Mid_of_tri=Calculate_Mid_of_triangle(Not_Projected[*(mod->Indicies+i)],Not_Projected[*(mod->Indicies+i+1)],Not_Projected[*(mod->Indicies+i+2)]);
-view_vec=view_vec.Direction_Vec(Origin,Mid_of_tri);
+class Vec3 view_vec(-Mid_of_tri.x,-Mid_of_tri.y,-Mid_of_tri.z);
 light_intensity=calculate_light(Normal,Mid_of_tri,view_vec,1);
 r.Set_Intensity(light_intensity);
 
 
 //back face cull
-if(Normal.signed_angle_between(view_vec,Normal)>90)
+//std::cout<<"mid= "<<Mid_of_tri.x<<","<<Mid_of_tri.y<<","<<Mid_of_tri.z<<"|| " ;
+//std::cout<<"View= "<<view_vec.x<<","<<view_vec.y<<","<<view_vec.z<<"|| " ;
+//std::cout<<"Normal= "<<Normal.x<<","<<Normal.y<<","<<Normal.z<<"|| "<<"angle= "<<Normal.unsigned_angle_between(view_vec,Normal)<<std::endl;
+//if(Normal.unsigned_angle_between(view_vec,Normal)<=90)
 draw_filled_tris(Projected[*(mod->Indicies+i)],Projected[*(mod->Indicies+i+1)],Projected[*(mod->Indicies+i+2)],r);
 }
 }
@@ -384,9 +403,9 @@ return intense;
 class Vec3 Calculate_Mid_of_triangle(class Vec3 P0,class Vec3 P1,class Vec3 P2)
 {
 
-   double x=0.333*(P0.x+P1.x+P2.x);
-   double y=0.333*(P0.y+P1.y+P2.y);
-   double z=0.333*(P0.z+P1.z+P2.z);
+   double x=(double)0.333*(P0.x+P1.x+P2.x);
+   double y=(double)0.333*(P0.y+P1.y+P2.y);
+   double z=(double)0.333*(P0.z+P1.z+P2.z);
    class Vec3 M(x,y,z);
    return M;
 
