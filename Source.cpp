@@ -20,8 +20,8 @@ class Vec3 Project_Vertex(class Vertex A);
 class Vec3 View_to_canvas(class Vec3 A);//scales up for the canvas
 class Vec3 normalized_to_screen_cord(int X,int Y);
 class Vec3 Calculate_Mid_of_triangle(class Vec3 P0,class Vec3 P1,class Vec3 P2);
-int Win_Width=700;
-int Win_Height=700;
+int Win_Width=500;
+int Win_Height=500;
 int View_H=2;
 int View_W=2;
 double View_d=2;
@@ -100,10 +100,10 @@ Not_Projected[i/3].z=(*(mod->Verticies+2+i))+mod->Global_Pos.z;
 mod->Rotation.y=(3.1416*-30)/180.0;
 mod->Rotation.x=(3.1416*0)/180.0;
 mod->Rotation.z=0;
-mod->Scale.x=2;
-mod->Scale.y=2;
-mod->Scale.z=2;
-class Vec3 translate(0,0,30);
+mod->Scale.x=2.5;
+mod->Scale.y=2.5;
+mod->Scale.z=2.5;
+class Vec3 translate(1,0,30);
 Projected[i/3]=Matrix::Transform(Projected[i/3],mod->Scale,mod->Rotation,translate);
 
 class Vertex v(Projected[i/3].x,Projected[i/3].y,Projected[i/3].z,'g');
@@ -122,10 +122,10 @@ class Vec3 Normal(*(mod->Face_Normals+i),*(mod->Face_Normals+i+1),*(mod->Face_No
 mod->Rotation.y=(3.1416*-30)/180.0;
 mod->Rotation.x=(3.1416*0)/180.0;
 mod->Rotation.z=0;
-mod->Scale.x=2;
-mod->Scale.y=2;
-mod->Scale.z=2;
-class Vec3 translate(0,0,30);
+mod->Scale.x=2.5;
+mod->Scale.y=2.5;
+mod->Scale.z=2.5;
+class Vec3 translate(1,0,30);
 Normal=Matrix::Transform(Normal,mod->Scale,mod->Rotation,translate);
 
 class Vec3 Origin(0,0,0);
