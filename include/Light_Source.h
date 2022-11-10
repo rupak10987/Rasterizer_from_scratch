@@ -9,18 +9,18 @@ enum Light_type
 };
 class Light_Source
 {
-    public:
-        double intensity;
-        Light_type type;
-        class Vec3 pos;
+public:
+    double intensity;
+    Light_type type;
+    class Vec3 pos;
 
-        Light_Source();
-        Light_Source(double intensity,Light_type type,class Vec3 pos);
-        virtual ~Light_Source();
+    Light_Source();
+    Light_Source(double intensity,Light_type type,class Vec3 pos);
+    virtual ~Light_Source();
 
-    protected:
+protected:
 
-    private:
+private:
 };
 
 #endif // LIGHT_SOURCE_H

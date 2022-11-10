@@ -98,8 +98,8 @@ void load_obj_data(char* filePath,double* vertex,int *num_vertex,int* index,int 
                             }
                             else if(local_normal_count>0 && local_vertex_count<0 && local_index_count<=0 && local_col_count<=0)
                             {
-                               normal[(*num_index)*3-local_normal_count]=num;
-                               local_normal_count--;
+                                normal[(*num_index)*3-local_normal_count]=num;
+                                local_normal_count--;
                             }
                         }
 //reinitialize quee and stack
@@ -171,10 +171,10 @@ void load_obj_data(char* filePath,double* vertex,int *num_vertex,int* index,int 
                                 color[(*num_index)*3-local_col_count]=num;
                                 local_col_count--;
                             }
-                             else if(local_normal_count>0 && local_vertex_count<0 && local_index_count<=0 && local_col_count<=0)
+                            else if(local_normal_count>0 && local_vertex_count<0 && local_index_count<=0 && local_col_count<=0)
                             {
-                               normal[(*num_index)*3-local_normal_count]=num;
-                               local_normal_count--;
+                                normal[(*num_index)*3-local_normal_count]=num;
+                                local_normal_count--;
                             }
                         }
 
@@ -372,7 +372,7 @@ void load_Array_sizes(char* filepath,int* num_of_verts,int *num_of_indicies)
             }
         }
         if(!in.eof() && in.fail())
-        std::cout << "error reading " << filepath <<std::endl;
+            std::cout << "error reading " << filepath <<std::endl;
         in.close();
     }
 }

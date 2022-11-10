@@ -84,9 +84,9 @@ double Vec3::Length(class Vec3 A)
 }
 double Vec3::unsigned_angle_between(class Vec3 From,class Vec3 To)
 {
- double cos_angle;
- cos_angle=(double)DOT_PRODUCT(From,To)/(double)(Length(From)*Length(To));
- double angle;
- angle=(double)acos(cos_angle)*(180.00/3.1416);
- return angle;
+    double cos_angle;
+    cos_angle=(double)DOT_PRODUCT(From,To)/(double)(Length(From)*Length(To));
+    double angle;
+    angle=(double)acos(cos_angle)*(180.00/3.1416);
+    return angle;
 }
