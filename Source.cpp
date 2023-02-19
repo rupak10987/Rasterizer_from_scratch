@@ -17,6 +17,7 @@ void draw_filled_tris(class Vec3 P0,class Vec3 P1,class Vec3 P2,class Col col);
 void ineterpolate(double x0,double y0,double x1,double y1);
 void draw_line(class Vec3 P,class Vec3 P1,class Col col);
 class Vec3 Project_Vertex(class Vertex A);
+class Vec3 anti_Projection(class Vec3 A);
 class Vec3 View_to_canvas(class Vec3 A);//scales up for the canvas
 class Vec3 normalized_to_screen_cord(int X,int Y);
 class Vec3 Calculate_Mid_of_triangle(class Vec3 P0,class Vec3 P1,class Vec3 P2);
@@ -96,7 +97,7 @@ void render_object(class Model* mod,bool render_faces,bool render_wireframe)
         Not_Projected[i/3]=Projected[i/3];
 
         mod->Rotation.y=(3.1416*-30)/180.0;
-        mod->Rotation.x=(3.1416*0)/180.0;
+        mod->Rotation.x=(3.1416*-20)/180.0;
         mod->Rotation.z=(3.1416*0)/180.0;
         mod->Scale.x=2.5;
         mod->Scale.y=2.5;
@@ -118,7 +119,7 @@ void render_object(class Model* mod,bool render_faces,bool render_wireframe)
             class Vec3 Normal(*(mod->Face_Normals+i),*(mod->Face_Normals+i+1),*(mod->Face_Normals+i+2));
 
             mod->Rotation.y=(3.1416*-30)/180.0;
-            mod->Rotation.x=(3.1416*0)/180.0;
+            mod->Rotation.x=(3.1416*-20)/180.0;
             mod->Rotation.z=(3.1416*0)/180.0;
             mod->Scale.x=2.5;
             mod->Scale.y=2.5;
@@ -129,6 +130,7 @@ void render_object(class Model* mod,bool render_faces,bool render_wireframe)
             class Vec3 Origin(0,0,0);
             class Vec3 Mid_of_tri;
             Mid_of_tri=Calculate_Mid_of_triangle(Not_Projected[*(mod->Indicies+i)],Not_Projected[*(mod->Indicies+i+1)],Not_Projected[*(mod->Indicies+i+2)]);
+            //Mid_of_tri=Calculate_Mid_of_triangle(anti_Projection(Projected[*(mod->Indicies+i)]),anti_Projection(Projected[*(mod->Indicies+i+1)]),anti_Projection(Projected[*(mod->Indicies+i+2)]));
             class Vec3 view_vec(-Mid_of_tri.x,-Mid_of_tri.y,-Mid_of_tri.z);
             light_intensity=calculate_light(Normal,Mid_of_tri,view_vec,-1);
             r.Set_Intensity(light_intensity);
@@ -175,7 +177,15 @@ class Vec3 View_to_canvas(class Vec3 A)
     return A;
 }
 
-
+class Vec3 anti_Projection(class Vec3 A)
+{
+    A.x=(A.x*A.z)/View_d;
+    A.y=((A.y*A.z)/View_d)*((double)Win_Height/(double)Win_Width);
+    //anti canvas
+    A.x=(A.x*View_W)/Win_Width;
+    A.y=(A.y*View_H)/Win_Height;
+    return A;
+};
 void draw_filled_tris(class Vec3 P0,class Vec3 P1,class Vec3 P2,class Col col)
 {
     class Vec3 X_left(0,0,0);
@@ -269,8 +279,8 @@ void draw_line(class Vec3 P,class Vec3 P1,class Col col)
                 if(screen_cord.x<=Win_Width && screen_cord.x>=0 && screen_cord.y>=0 && screen_cord.y<=Win_Height)
                     if(z_buff[(int)screen_cord.y][(int)screen_cord.x]>zz)
                     {
+                        putpixel(screen_cord.x,screen_cord.y,COLOR(col.r,col.g,col.b));
                         z_buff[(int)screen_cord.y][(int)screen_cord.x]=zz;
-                        putpixel((int)screen_cord.x,(int)screen_cord.y,COLOR(col.r,col.g,col.b));
                     }
 
             }
@@ -296,7 +306,7 @@ void draw_line(class Vec3 P,class Vec3 P1,class Col col)
                     if(z_buff[(int)screen_cord.y][(int)screen_cord.x]>zz )
                     {
                         z_buff[(int)screen_cord.y][(int)screen_cord.x]=zz;
-                        putpixel((int)screen_cord.x,(int)screen_cord.y,COLOR(col.r,col.g,col.b));
+                        putpixel(screen_cord.x,screen_cord.y,COLOR(col.r,col.g,col.b));
                     }
             }
         }
@@ -313,7 +323,8 @@ double calc_intermedizte_z(int i,class Vec3 P0,class Vec3 P1)
         double a=(double)(P1.z-P0.z)/(double)(P1.x-P0.x);//slope m
         double b=P0.z-(a*P0.x);//C
         double z=b+a*i;
-        return z;
+
+        return abs(z);
     }
     else
     {
@@ -321,7 +332,7 @@ double calc_intermedizte_z(int i,class Vec3 P0,class Vec3 P1)
         double a=(double)(P1.z-P0.z)/(double)(P1.y-P0.y);
         double b=P0.z-(a*P0.y);
         double z=b+a*i;
-        return z;
+        return abs(z);
     }
 }
 
@@ -336,7 +347,7 @@ double calc_intermedizte_1_by_z(int i,class Vec3 P0,class Vec3 P1)
     P1.z=(double)1.0/P1.z;
 
 
-    if(DX>DY)
+    if(DX>=DY)
     {
         double z=P0.z+(i+P0.x)*(double(P1.z-P0.z)/double(P1.x-P0.x));
         return z;

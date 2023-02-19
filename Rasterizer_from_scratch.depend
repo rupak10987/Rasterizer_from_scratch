@@ -2,21 +2,21 @@
 1667618917 source:e:\projects\rasterizer_from_scratch\rasterizer_from_scratch\src\col.cpp
 	"Col.h"
 
-1667618919 e:\projects\rasterizer_from_scratch\rasterizer_from_scratch\include\col.h
+1668048584 e:\projects\rasterizer_from_scratch\rasterizer_from_scratch\include\col.h
 
 1665046003 source:e:\projects\rasterizer_from_scratch\rasterizer_from_scratch\src\light_source.cpp
 	"Light_Source.h"
 
-1665046003 e:\projects\rasterizer_from_scratch\rasterizer_from_scratch\include\light_source.h
+1668048584 e:\projects\rasterizer_from_scratch\rasterizer_from_scratch\include\light_source.h
 	"Vec3.h"
 
-1667738310 e:\projects\rasterizer_from_scratch\rasterizer_from_scratch\include\vec3.h
+1668048584 e:\projects\rasterizer_from_scratch\rasterizer_from_scratch\include\vec3.h
 	<math.h>
 
-1667741285 source:e:\projects\rasterizer_from_scratch\rasterizer_from_scratch\src\vec3.cpp
+1668048584 source:e:\projects\rasterizer_from_scratch\rasterizer_from_scratch\src\vec3.cpp
 	"Vec3.h"
 
-1667838498 source:e:\projects\rasterizer_from_scratch\rasterizer_from_scratch\source.cpp
+1668061299 source:e:\projects\rasterizer_from_scratch\rasterizer_from_scratch\source.cpp
 	<graphics.h>
 	<iostream>
 	<math.h>
@@ -34,14 +34,14 @@
 	"Vec3.h"
 	"Col.h"
 
-1667616136 source:e:\projects\rasterizer_from_scratch\rasterizer_from_scratch\src\model.cpp
+1668048584 source:e:\projects\rasterizer_from_scratch\rasterizer_from_scratch\src\model.cpp
 	"Model.h"
 	<../Loader.h>
 
-1667615687 e:\projects\rasterizer_from_scratch\rasterizer_from_scratch\include\model.h
+1668048584 e:\projects\rasterizer_from_scratch\rasterizer_from_scratch\include\model.h
 	"Vec3.h"
 
-1667550572 e:\projects\rasterizer_from_scratch\rasterizer_from_scratch\matrix.h
+1668048584 e:\projects\rasterizer_from_scratch\rasterizer_from_scratch\matrix.h
 	"Vec3.h"
 	<iostream>
 	<math.h>
@@ -51,7 +51,7 @@
 	<fstream>
 	<math.h>
 
-1667616136 e:\projects\rasterizer_from_scratch\rasterizer_from_scratch\loader.h
+1668048584 e:\projects\rasterizer_from_scratch\rasterizer_from_scratch\loader.h
 	<iostream>
 	<fstream>
 	<math.h>
