@@ -14,7 +14,8 @@ double calc_intermedizte_z(int i,class Vec3 P,class Vec3 P1);
 double calc_intermedizte_1_by_z(int i,class Vec3 P0,class Vec3 P1);
 void render_object(class Model* mod,bool render_faces,bool render_wireframe);
 void draw_filled_tris(class Vec3 P0,class Vec3 P1,class Vec3 P2,class Col col);
-void ineterpolate(double x0,double y0,double x1,double y1);
+void draw_filled_tris_with_interpolation(class Vec3 P0,class Vec3 P1,class Vec3 P2,class Col col);
+void ineterpolate(double x0,double y0,double x1,double y1,double* rslt_i_array);
 void draw_line(class Vec3 P,class Vec3 P1,class Col col);
 class Vec3 Project_Vertex(class Vertex A);
 class Vec3 anti_Projection(class Vec3 A);
@@ -254,6 +255,67 @@ void draw_filled_tris(class Vec3 P0,class Vec3 P1,class Vec3 P2,class Col col)
 }
 
 
+
+
+
+
+void draw_filled_tris_with_interpolation(class Vec3 P0,class Vec3 P1,class Vec3 P2,class Col col)
+{
+    class Vec3 X_left(0,0,0);
+    class Vec3 X_right(0,0,0);
+//sorting the points according to their height po lowest p1 mid and p2 highest
+    if(P0.y>P1.y)
+        draw_filled_tris(P1,P0,P2,col);
+    if(P0.y>P2.y)
+        draw_filled_tris(P2,P1,P0,col);
+    if(P1.y>P2.y)
+        draw_filled_tris(P0,P2,P1,col);
+
+//if the triangle is like a st line do nothing
+    double a_side=P1.Length(P1.Direction_Vec(P1,P0));
+    double b_side=P1.Length(P1.Direction_Vec(P2,P1));
+    double c_side=P1.Length(P1.Direction_Vec(P2,P0));
+    double length=a_side+b_side+c_side;
+    if(length<a_side+b_side || length<b_side+c_side || length<a_side+c_side)
+        return;
+
+double *x012;
+double *x02;
+
+int legth_of_x012=((P2.y-P1.y)+1)+((P1.y-P0.y)+1);
+int legth_of_x02=(P2.y-P0.y)+1;
+x012=new double[legth_of_x012];
+x02=new double[legth_of_x02];
+ineterpolate(P0.x,P0.y,P1.x,P1.y,x012);
+ineterpolate(P1.x,P1.y,P2.x,P2.y,&x012[((int)P1.y-(int)P0.y)+1]);
+ineterpolate(P0.x,P0.y,P2.x,P2.y,x02);
+double *x_left,*x_right;
+if(x012[(legth_of_x012/2)-2]<x02[(legth_of_x012/2)-2])
+{
+     x_left=x012;
+     x_right=x02;
+}
+else
+{
+    x_left=x02;
+    x_right=x012;
+}
+
+//draw line from x_left to x_right
+for(int j=P0.y;j<P2.y;j++)
+{
+for(int i=0;i<legth_of_x02;i++)
+{
+class Vec3 P(x_left[i],j,0);
+class Vec3 P1(x_right[i],j,0);
+
+draw_line(P,P1,col);
+}
+}
+
+}
+
+
 void draw_line(class Vec3 P,class Vec3 P1,class Col col)
 {
     double DX=abs(P1.x-P.x);
@@ -409,6 +471,22 @@ double calculate_light(class Vec3 N,class Vec3 P,class Vec3 V,double s)
     }
     return intense;
 }
+
+void ineterpolate(double x0,double y0,double x1,double y1,double* rslt_i_array)
+{
+float im;
+//y1 must be greater than y0
+if(y1-y0!=0)
+im=(x1-x0)/(y1-y0); //im is 1/m
+double x=x0;
+for(int i=y0;i<y1;i++)
+{
+x+=im;
+rslt_i_array[i-(int)y0]=x;
+}
+}
+
+
 
 class Vec3 Calculate_Mid_of_triangle(class Vec3 P0,class Vec3 P1,class Vec3 P2)
 {
