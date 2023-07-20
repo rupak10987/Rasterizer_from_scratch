@@ -14,8 +14,8 @@ double calc_intermedizte_z(int i,class Vec3 P,class Vec3 P1);
 double calc_intermedizte_1_by_z(int i,class Vec3 P0,class Vec3 P1);
 void render_object(class Model* mod,bool render_faces,bool render_wireframe);
 void draw_filled_tris(class Vec3 P0,class Vec3 P1,class Vec3 P2,class Col col);
-void draw_filled_tris_with_interpolation(class Vec3 P0,class Vec3 P1,class Vec3 P2,class Col col);
-void ineterpolate(double x0,double y0,double x1,double y1,double* rslt_i_array);
+void filled_tries_with_intpol(class Vec3 P0,class Vec3 P1,class Vec3 P2,class Col col);
+void interpolate(float x0,float y0,float x1,float y1,float *arr);
 void draw_line(class Vec3 P,class Vec3 P1,class Col col);
 class Vec3 Project_Vertex(class Vertex A);
 class Vec3 anti_Projection(class Vec3 A);
@@ -143,6 +143,7 @@ void render_object(class Model* mod,bool render_faces,bool render_wireframe)
 //std::cout<<"Normal= "<<Normal.x<<","<<Normal.y<<","<<Normal.z<<"|| "<<"angle= "<<Normal.unsigned_angle_between(view_vec,Normal)<<std::endl;
 //if(Normal.unsigned_angle_between(view_vec,Normal)<=90)
             draw_filled_tris(Projected[*(mod->Indicies+i)],Projected[*(mod->Indicies+i+1)],Projected[*(mod->Indicies+i+2)],r);
+            //filled_tries_with_intpol(Projected[*(mod->Indicies+i)],Projected[*(mod->Indicies+i+1)],Projected[*(mod->Indicies+i+2)],r)
         }
     }
     if(render_wireframe)
@@ -256,63 +257,91 @@ void draw_filled_tris(class Vec3 P0,class Vec3 P1,class Vec3 P2,class Col col)
 
 
 
-
-
-
-void draw_filled_tris_with_interpolation(class Vec3 P0,class Vec3 P1,class Vec3 P2,class Col col)
+void filled_tries_with_intpol(class Vec3 P0,class Vec3 P1,class Vec3 P2,class Col col)//
 {
-    class Vec3 X_left(0,0,0);
-    class Vec3 X_right(0,0,0);
-//sorting the points according to their height po lowest p1 mid and p2 highest
-    if(P0.y>P1.y)
-        draw_filled_tris(P1,P0,P2,col);
-    if(P0.y>P2.y)
-        draw_filled_tris(P2,P1,P0,col);
-    if(P1.y>P2.y)
-        draw_filled_tris(P0,P2,P1,col);
 
-//if the triangle is like a st line do nothing
-    double a_side=P1.Length(P1.Direction_Vec(P1,P0));
-    double b_side=P1.Length(P1.Direction_Vec(P2,P1));
-    double c_side=P1.Length(P1.Direction_Vec(P2,P0));
-    double length=a_side+b_side+c_side;
-    if(length<a_side+b_side || length<b_side+c_side || length<a_side+c_side)
-        return;
-
-double *x012;
-double *x02;
-
-int legth_of_x012=((P2.y-P1.y)+1)+((P1.y-P0.y)+1);
-int legth_of_x02=(P2.y-P0.y)+1;
-x012=new double[legth_of_x012];
-x02=new double[legth_of_x02];
-ineterpolate(P0.x,P0.y,P1.x,P1.y,x012);
-ineterpolate(P1.x,P1.y,P2.x,P2.y,&x012[((int)P1.y-(int)P0.y)+1]);
-ineterpolate(P0.x,P0.y,P2.x,P2.y,x02);
-double *x_left,*x_right;
-if(x012[(legth_of_x012/2)-2]<x02[(legth_of_x012/2)-2])
+if(P1.y<P0.y)
 {
-     x_left=x012;
-     x_right=x02;
+    float temp=P0.y;
+        P0.y=P1.y;
+        P1.y=temp;
+        temp=P0.x;
+        P0.x=P1.x;
+        P1.x=temp;
+        temp=P0.z;
+        P0.z=P1.z;
+        P1.z=temp;
+
 }
-else
+if(P2.y<P0.y)
 {
-    x_left=x02;
-    x_right=x012;
+    float temp=P0.y;
+        P0.y=P2.y;
+        P2.y=temp;
+        temp=P0.x;
+        P0.x=P2.x;
+        P2.x=temp;
+        temp=P0.z;
+        P0.z=P2.z;
+        P2.z=temp;
+
+}
+if(P2.y<P1.y)
+{
+    float temp=P1.y;
+        P1.y=P2.y;
+        P2.y=temp;
+        temp=P1.x;
+        P1.x=P2.x;
+        P2.x=temp;
+        temp=P1.z;
+        P1.z=P2.z;
+        P2.z=temp;
+
+}
+P0.z=1.0/P0.z;
+P1.z=1.0/P1.z;
+P2.z=1.0/P2.z;
+
+    float *x_left,*iz_left;
+    float *x_right,*iz_right;
+    //x02 is left
+    x_left=new float[(int)P2.y-(int)P0.y+1];
+    iz_left=new float[(int)P2.y-(int)P0.y+1];
+    x_right=new float[((int)P1.y-(int)P0.y+1)+((int)P2.y-(int)P1.y+1)];
+    iz_right=new float[((int)P1.y-(int)P0.y+1)+((int)P2.y-(int)P1.y+1)];
+
+    interpolate(P0.x,P0.y,P2.x,P2.y,x_left);
+    interpolate(P0.z,P0.y,P2.z,P2.y,iz_left);
+
+    interpolate(P0.x,P0.y,P1.x,P1.y,&x_right[0]);
+    interpolate(P0.z,P0.y,P1.z,P1.y,&iz_right[0]);
+
+    interpolate(P1.x,P1.y,P2.x,P2.y,&x_right[((int)P1.y-(int)P0.y)]);
+    interpolate(P1.z,P1.y,P2.z,P2.y,&iz_right[((int)P1.y-(int)P0.y)]);
+
+
+    for(int i=P0.y;i<P2.y;i++)
+    {
+        class Vec3 V0(x_left[i-(int)y0],i,iz_left[i-(int)y0]);
+        class Vec3 V1(x_right[i-(int)y0],i,iz_right[i-(int)y0]);
+        draw_line(V0,V1,col);
+    }
+
+
+
 }
 
-//draw line from x_left to x_right
-for(int j=P0.y;j<P2.y;j++)
+void interpolate(float x0,float y0,float x1,float y1,float *arr)
 {
-for(int i=0;i<legth_of_x02;i++)
-{
-class Vec3 P(x_left[i],j,0);
-class Vec3 P1(x_right[i],j,0);
-
-draw_line(P,P1,col);
-}
-}
-
+        float dy=y1-y0;
+        float dx=x1-x0;
+        float x=x0;
+        for(int i=y0;i<y1;i++)
+        {
+            x+=(dx/dy);
+            arr[i-(int)y0]=x;
+        }
 }
 
 
@@ -330,14 +359,15 @@ void draw_line(class Vec3 P,class Vec3 P1,class Col col)
         {
             double m=(double)(P1.y-P.y)/(double)(P1.x-P.x);// calculating slope
             double yn=P.y;
-            double h=0.51;
+            float *iz_values;
+            iz_values=new float[abs((int)P.x-(int)P1.x)+1];
+            interpolate(P.z,P.x,P1.z,P1.x,iz_values);
             for(int i=P.x; i<=P1.x; i++)
             {
                 Vec3 screen_cord;
                 screen_cord=normalized_to_screen_cord(i,(int)yn);
                 yn+=m;
-                h+=0.01;
-                double zz=calc_intermedizte_z(i,P,P1);//calc_intermedizte_z(i,P,P1);
+                double zz=iz_values[i-(int)P.x];//calc_intermedizte_z(i,P,P1);//calc_intermedizte_z(i,P,P1);
                 if(screen_cord.x<=Win_Width && screen_cord.x>=0 && screen_cord.y>=0 && screen_cord.y<=Win_Height)
                     if(z_buff[(int)screen_cord.y][(int)screen_cord.x]>zz)
                     {
@@ -358,12 +388,15 @@ void draw_line(class Vec3 P,class Vec3 P1,class Col col)
         {
             double m=(double)(P1.x-P.x)/(double)(P1.y-P.y);//calculating slope
             double xn=P.x;
+            float *iz_values;
+            iz_values=new float[abs((int)P.x-(int)P1.x)+1];
+            interpolate(P.z,P.x,P1.z,P1.x,iz_values);
             for(int i=P.y; i<=P1.y; i++)
             {
                 Vec3 screen_cord;
                 screen_cord=normalized_to_screen_cord((int)xn,i);//converting from normal graph cordinate to screen co_ordinate system
                 xn+=m;
-                double zz=calc_intermedizte_z(i,P,P1);//calc_intermedizte_z(i,P,P1);
+                double zz=iz_values[i-(int)P.x];//calc_intermedizte_z(i,P,P1);//calc_intermedizte_z(i,P,P1);
                 if(screen_cord.x<=Win_Width && screen_cord.x>=0 && screen_cord.y>=0 && screen_cord.y<=Win_Height)
                     if(z_buff[(int)screen_cord.y][(int)screen_cord.x]>zz )
                     {
@@ -472,19 +505,6 @@ double calculate_light(class Vec3 N,class Vec3 P,class Vec3 V,double s)
     return intense;
 }
 
-void ineterpolate(double x0,double y0,double x1,double y1,double* rslt_i_array)
-{
-float im;
-//y1 must be greater than y0
-if(y1-y0!=0)
-im=(x1-x0)/(y1-y0); //im is 1/m
-double x=x0;
-for(int i=y0;i<y1;i++)
-{
-x+=im;
-rslt_i_array[i-(int)y0]=x;
-}
-}
 
 
 
